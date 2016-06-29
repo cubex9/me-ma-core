@@ -1,15 +1,12 @@
 package eu.cxn.mema;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.skelet.IEntity;
-import static eu.cxn.mema.xlo.Xlo.info;
+import org.bson.types.ObjectId;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.bson.types.ObjectId;
+
 import static eu.cxn.mema.xlo.Xlo.info;
 
 /**
@@ -18,21 +15,6 @@ import static eu.cxn.mema.xlo.Xlo.info;
  */
 public abstract class Entity implements IEntity {
     
-    private static final ObjectMapper om = new ObjectMapper();
-    static {
-        om.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        om.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        om.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-        om.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        om.configure(SerializationFeature.INDENT_OUTPUT, true);
-        om.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-        om.configure(MapperFeature.USE_ANNOTATIONS,true);
-    }
-
-
 
     private ObjectId guid;
 
@@ -47,8 +29,8 @@ public abstract class Entity implements IEntity {
         Map<String, Object> res = new LinkedHashMap<>();
         res.put("_id", guid);
         res.put("clazz", clazz());
-        
-        om.writeValueAsString(this);
+
+        Oma.write(this);
 
         return res;
     }
