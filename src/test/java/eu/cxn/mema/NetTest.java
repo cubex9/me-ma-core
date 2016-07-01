@@ -3,6 +3,8 @@ package eu.cxn.mema;
 import eu.cxn.mema.skelet.INet;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by kubasek on 7/1/2016.
  */
@@ -25,6 +27,19 @@ public class NetTest {
     public void build() {
 
         INet net = Net.of("TEST", entities );
-        System.out.println( net.toString());
+
+        String exp = "Node:\n" +
+            "\tCaffe(1),\n" +
+            "\tMilk(2),\n" +
+            "\tSugar(3),\n" +
+            "\tCup(4)\n" +
+            "Tag:\n" +
+            "\tfood(8)\n" +
+            "Link:\n" +
+            "\t[Cup(4) -> Caffe(1)] (5),\n" +
+            "\t[Cup(4) -> Milk(2)] (6),\n" +
+            "\t[Cup(4) -> Sugar(3)] (7)";
+
+        assertEquals( exp, net.toString());
     }
 }

@@ -70,7 +70,7 @@ public class Strings {
         return sb;
     }
 
-    public static String join(String sepa, Iterable<String> ike) {
+    public static String join(String sepa, Iterable<Object> ike) {
         return join(sepa, ike, null);
     }
 
@@ -80,10 +80,10 @@ public class Strings {
      * @param separator
      * @param ike
      */
-    public static String join(String separator, Iterable<String> ike, String format) {
+    public static String join(String separator, Iterable<Object> ike, String format) {
         String res = "";
         if (ike != null) {
-            for (String s : ike) {
+            for (Object s : ike) {
                 if (format == null) {
                     res += "".equals(res) ? s : (separator + s);
                 } else {

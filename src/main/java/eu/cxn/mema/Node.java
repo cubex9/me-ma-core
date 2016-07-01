@@ -52,6 +52,6 @@ public class Node extends Entity implements INode {
 
     @Override
     public String toString() {
-        return "NODE: " + name;
+        return name + "("+id()+")";
     }
 }

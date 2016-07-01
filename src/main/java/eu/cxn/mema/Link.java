@@ -56,4 +56,9 @@ public class Link extends Entity implements ILink {
     public double getWeight() {
         return weight;
     }
+
+    @Override
+    public String toString() {
+        return "[" + getOff() + " -> " + getTarget() + "] ("+id()+")";
+    }
 }

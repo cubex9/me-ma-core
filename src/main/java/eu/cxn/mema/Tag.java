@@ -19,4 +19,9 @@ public class Tag extends Entity implements ITag {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return name + "("+id()+")";
+    }
 }
