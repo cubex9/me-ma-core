@@ -32,7 +32,7 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
     /**
      * events methodes
      */
-    private IMongoPutIn putIn;
+    //private IMongoPutIn putIn;
 
     /**
      * with connection parameter
@@ -48,10 +48,10 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
         this.collection = collection;
     }
 
-    @Override
-    public void putIn(IMongoPutIn putIn) {
-        this.putIn = putIn;
-    }
+//    @Override
+//    public void putIn(IMongoPutIn putIn) {
+//        this.putIn = putIn;
+//    }
 
     /**
      * jelikos casto poskytujeme spojeni pres collectionalni spojeni, hodi se mit ho takhle venku
@@ -96,9 +96,9 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
     @Override
     public <E extends IEntity> IMongoCollection<E> createMoCoColle(Class<E> cls, String collection, boolean losa) {
         IMongoCollection<E> mocolle = createMoCoColle(cls, collection);
-        if (losa) {
-            mocolle.losaOn();
-        }
+//        if (losa) {
+//            mocolle.losaOn();
+//        }
         return mocolle;
     }
 
@@ -113,9 +113,9 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
     public <E> List<E> find(String query) {
         List<E> res = conn.find(cls, collection, query, fields, new ArrayList<E>());
 
-        if (putIn != null) {
-            res = putIn.on(IMongoPutIn.On.LOAD, res);
-        }
+//        if (putIn != null) {
+//            res = putIn.on(IMongoPutIn.On.LOAD, res);
+//        }
 
         fields = null;
         return res;
@@ -133,9 +133,9 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
     public <E> List<E> textSearch(String query, String fields) {
         List<E> res = conn.textSearch(cls, collection, query, fields, new ArrayList<E>());
 
-        if (putIn != null) {
-            res = putIn.on(IMongoPutIn.On.LOAD, res);
-        }
+//        if (putIn != null) {
+//            res = putIn.on(IMongoPutIn.On.LOAD, res);
+//        }
 
         fields = null;
         return res;
@@ -152,9 +152,9 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
     public <E> E findOne(String query) {
         E e = conn.findOne(cls, collection, query, fields);
 
-        if (putIn != null && e instanceof MoPro) {
-            e = (E) putIn.on(IMongoPutIn.On.LOAD, (MoPro) e);
-        }
+//        if (putIn != null && e instanceof MoPro) {
+//            e = (E) putIn.on(IMongoPutIn.On.LOAD, (MoPro) e);
+//        }
 
         fields = null;
         return e;
@@ -202,20 +202,21 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
      */
     @Override
     public boolean insert(T o) {
-        if (o instanceof Mobject) {
-            o.setMoCo(conn);
-            if (losa) {
-                ((Mobject) o).onSave();
-            }
-        }
+//        if (o instanceof Mobject) {
+//            o.setMoCo(conn);
+//            if (losa) {
+//                ((Mobject) o).onSave();
+//            }
+//        }
         /**
          * Putinator
          */
-        if (putIn != null && o instanceof IEntity) {
-            o = (T) putIn.on(IMongoPutIn.On.INSERT, (MoPro) o);
-        }
+//        if (putIn != null && o instanceof IEntity) {
+//            o = (T) putIn.on(IMongoPutIn.On.INSERT, (MoPro) o);
+//        }
 
         return conn.insert(collection, (DBObject) o);
+        //return false;
     }
 
     /**
@@ -226,11 +227,12 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
      */
     @Override
     public boolean remove(T o) {
-        if (putIn != null && o instanceof IEntity) {
-            o = (T) putIn.on(IMongoPutIn.On.REMOVE, (MoPro) o);
-        }
+//        if (putIn != null && o instanceof IEntity) {
+//            o = (T) putIn.on(IMongoPutIn.On.REMOVE, (MoPro) o);
+//        }
 
-        return conn.remove(collection, (Mobject) o);
+        //return conn.remove(collection, (Mobject) o);
+        return false;
     }
 
     /**
@@ -241,15 +243,15 @@ public class MongoCollection<T extends IEntity> implements IMongoCollection<T> {
      */
     @Override
     public boolean save(T o) {
-        if (o instanceof Mobject) {
-            o.setMoCo(conn);
-            if (losa) {
-                ((Mobject) o).onSave();
-            }
-        }
-        if (putIn != null && o instanceof IEntity) {
-            o = (T) putIn.on(IMongoPutIn.On.SAVE, (MoPro) o);
-        }
+//        if (o instanceof Mobject) {
+//            o.setMoCo(conn);
+//            if (losa) {
+//                ((Mobject) o).onSave();
+//            }
+//        }
+//        if (putIn != null && o instanceof IEntity) {
+//            o = (T) putIn.on(IMongoPutIn.On.SAVE, (MoPro) o);
+//        }
 
         return conn.save(collection, (DBObject) o);
     }

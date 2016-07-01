@@ -63,7 +63,6 @@ public class Oma {
      * read from string
      * @param data
      * @param clazz
-     * @param <T>
      * @return
      */
     public static Object read(String data, Class<?> clazz) {
@@ -71,6 +70,7 @@ public class Oma {
             return get().readValue(data, clazz);
         } catch( IOException ioe ) {
             LOG.error( "Cant read json data: " + data, ioe );
+            throw new IllegalStateException("Cant read" + data);
         }
     }
 

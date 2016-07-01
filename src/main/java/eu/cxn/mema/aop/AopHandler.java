@@ -119,104 +119,106 @@ public class AopHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method m, Object[] args)
             throws Throwable {
-        /**
-         * jinak by se to volalo dokola rekurziiivne
-         */
-        if (isin) {
-            isin = false;
-            return null;
-        }
-
-        /**
-         * pokusi se najit aop event pro dany objekt a metodu
-         */
-        Stream<Aspect> aopes = AopStorage.get(proxy, m);
-        /**
-         * vysledek volane metody, muze projit after metodou
-         */
-        Object result = null;
-        /**
-         * before muze menit vstupni argumenty metody
-         */
-        Object[] aopArgs = null;
-
-        try {
-            //System.err.println("AOP: before method " + m.getName());
-            /**
-             * zavola aop before metodku
-             */
-            if (aopes != null) {
-                for (Aspect aope : aopes) {
-                    /**
-                     * se musej resit ty proklaty deti :-)
-                     */
-                    if (aope.getChildCall() != null) {
-                        /**
-                         * kdyz mam dite, jsem rodic, moje after/before se nevola jen nastavuji
-                         * objekt pro dite
-                         */
-                        aope.getChildCall().setParrentObject(obj);
-                    } else {
-                        /**
-                         * jsem li dite a objekt je nastaven, volaaam
-                         */
-                        if (aope.isChild() && aope.getParrentObject() != null) {
-                            aopArgs = aope.before(aope.getParrentObject(), args);
-                        } else {
-                            aopArgs = aope.before(obj, args);
-                        }
-                    }
-                }
-            }
-            /**
-             * invokace/volani vlastni metody + nastaveni antirecursive call TODO synchronize pro
-             * isin
-             */
-            result = m.invoke(obj, aopArgs == null ? args : aopArgs);
-
-            /**
-             * chybicky
-             */
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
-        } catch (IllegalAccessException | IllegalArgumentException e) {
-            throw new RuntimeException("AOP: unexpected invocation exception: " + e.getMessage());
-        } finally {
-            //System.err.println("AOP: after method " + m.getName());
-            /**
-             * zavola aop after metodku
-             */
-            if (aopes != null) {
-                for (Aspect aope : aopes) {
-                    /**
-                     * se musej resit ty proklaty deti :-)
-                     */
-                    if (aope.getChildCall() == null) {
-                        /**
-                         * jsem-li dite, a muj parrent objekt byl nastaven, volam se, pote parrent
-                         * objekt vynuluju, je jen pro jedno volani, jeden aspect
-                         */
-                        if (aope.isChild()) {
-                            if (aope.getParrentObject() != null) {
-                                result = aope.after(aope.getParrentObject(), result, args);
-                                aope.setParrentObject(null);
-                            }
-                        } else {
-                            /**
-                             * normalni volani, nemam dite, a nejsem dite
-                             */
-                            result = aope.after(obj, result, args);
-                        }
-                    }
-                    /**
-                     * mamli dite, tady nedelam nic, parrentObject nastavil before
-                     */
-
-                }
-            }
-
-            isin = false;
-        }
-        return result;
+//        /**
+//         * jinak by se to volalo dokola rekurziiivne
+//         */
+//        if (isin) {
+//            isin = false;
+//            return null;
+//        }
+//
+//        /**
+//         * pokusi se najit aop event pro dany objekt a metodu
+//         */
+//        Stream<Aspect> aopes = AopStorage.get(proxy, m);
+//        /**
+//         * vysledek volane metody, muze projit after metodou
+//         */
+//        Object result = null;
+//        /**
+//         * before muze menit vstupni argumenty metody
+//         */
+//        Object[] aopArgs = null;
+//
+//        try {
+//            //System.err.println("AOP: before method " + m.getName());
+//            /**
+//             * zavola aop before metodku
+//             */
+//            if (aopes != null) {
+//                aopes.forEach( aope -> {
+//
+//                    /**
+//                     * se musej resit ty proklaty deti :-)
+//                     */
+//                    if (aope.getChildCall() != null) {
+//                        /**
+//                         * kdyz mam dite, jsem rodic, moje after/before se nevola jen nastavuji
+//                         * objekt pro dite
+//                         */
+//                        aope.getChildCall().setParrentObject(obj);
+//                    } else {
+//                        /**
+//                         * jsem li dite a objekt je nastaven, volaaam
+//                         */
+//                        if (aope.isChild() && aope.getParrentObject() != null) {
+//                            aopArgs = aope.before(aope.getParrentObject(), args);
+//                        } else {
+//                            aopArgs = aope.before(obj, args);
+//                        }
+//                    }
+//                });
+//            }
+//            /**
+//             * invokace/volani vlastni metody + nastaveni antirecursive call TODO synchronize pro
+//             * isin
+//             */
+//            result = m.invoke(obj, aopArgs == null ? args : aopArgs);
+//
+//            /**
+//             * chybicky
+//             */
+//        } catch (InvocationTargetException e) {
+//            throw e.getTargetException();
+//        } catch (IllegalAccessException | IllegalArgumentException e) {
+//            throw new RuntimeException("AOP: unexpected invocation exception: " + e.getMessage());
+//        } finally {
+//            //System.err.println("AOP: after method " + m.getName());
+//            /**
+//             * zavola aop after metodku
+//             */
+//            if (aopes != null) {
+//                aopes.forEach( aope -> {
+//                    /**
+//                     * se musej resit ty proklaty deti :-)
+//                     */
+//                    if (aope.getChildCall() == null) {
+//                        /**
+//                         * jsem-li dite, a muj parrent objekt byl nastaven, volam se, pote parrent
+//                         * objekt vynuluju, je jen pro jedno volani, jeden aspect
+//                         */
+//                        if (aope.isChild()) {
+//                            if (aope.getParrentObject() != null) {
+//                                result = aope.after(aope.getParrentObject(), result, args);
+//                                aope.setParrentObject(null);
+//                            }
+//                        } else {
+//                            /**
+//                             * normalni volani, nemam dite, a nejsem dite
+//                             */
+//                            result = aope.after(obj, result, args);
+//                        }
+//                    }
+//                    /**
+//                     * mamli dite, tady nedelam nic, parrentObject nastavil before
+//                     */
+//
+//                });
+//            }
+//
+//            isin = false;
+//        }
+//        return result;
+        return null;
     }
 }

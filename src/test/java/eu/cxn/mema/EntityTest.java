@@ -14,10 +14,9 @@ import static org.junit.Assert.*;
  */
 public class EntityTest {
 
-    String json =
-            "{" +
-            "'id' : '4546576756765756'," +
-            "'clazz' : 'Entity' " +
+    String json = "{" +
+            "guid : '4546576756765756'," +
+            "clazz : 'Entity'" +
             "}";
 
     @Test
@@ -26,4 +25,5 @@ public class EntityTest {
         Entity e = Entity.of( json );
         assertEquals( "4546576756765756", e.guid());
     }
+
 }

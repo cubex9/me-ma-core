@@ -5,13 +5,15 @@
  */
 package eu.cxn.mema.aop;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+import eu.cxn.mema.util.Strings;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
 
 /**
  *
@@ -48,7 +50,7 @@ public class AopMethodUtils {
      * pole stringu jmen metodek ktere jsou 'possible'
      */
     public static Predicate<Method> methodFilter(final String... names) {
-        final String ens = StringUtils.join(",", names);
+        final String ens = Strings.join(",", names);
         return m -> { 
                 String mn = m.getName();
                 for (String s : names) {
@@ -81,7 +83,6 @@ public class AopMethodUtils {
     /**
      * zjisti jestli ma metoda anotaci
      *
-     * @param m
      * @param anot
      * @return
      */

@@ -1,15 +1,12 @@
 package eu.cxn.mema;
 
-import eu.cxn.mema.json.Oma;
+
 import eu.cxn.mema.skelet.IEntity;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static eu.cxn.mema.xlo.Xlo.info;
 
 /**
  *
@@ -18,9 +15,10 @@ import static eu.cxn.mema.xlo.Xlo.info;
 public class Entity implements IEntity {
     private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
     
+    @JsonProperty
+    private String guid;
 
-    private ObjectId guid;
-
+    @JsonProperty
     private String clazz;
 
     private Class<?> cls;
@@ -58,16 +56,23 @@ public class Entity implements IEntity {
     @Override
     public String guid() {
         if (guid == null) {
-            guid = ObjectId.get();
+            guid = ObjectId.get().toString();
         }
-        return guid.toString();
+        return guid;
     }
 
     @Override
     public Class<?> clazz() {
         try {
-            if (cls == null) {
-                cls = getClass();
+            if( clazz == null ) {
+                if( cls == null ) {
+                    cls = getClass();
+                }
+                clazz = cls.getName();
+            } else {
+                if( cls == null ) {
+                    cls = Class.forName("eu.cxn.mema." + clazz );
+                }
             }
             return cls;
         } catch (Exception ex) {

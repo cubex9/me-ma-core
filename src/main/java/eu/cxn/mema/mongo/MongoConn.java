@@ -207,7 +207,7 @@ public class MongoConn {
              * nikdy neni null, muze bejt prazdnej..
              */
             while (cur.hasNext()) {
-                out.add((E) IEntity.of(cur.next().toMap()));
+                //out.add((E) IEntity.of(cur.next().toMap()));
             }
 
         }
@@ -215,19 +215,19 @@ public class MongoConn {
         return (List<E>) out;
     }
 
-    /**
-     * najde podle jmena elementu a listu jeho hodnot seznam vsech objektu v collekci
-     *
-     * @param <T>
-     * @param <E>
-     * @param c
-     * @param collection
-     * @param name
-     * @param inListQuery
-     * @param fields
-     * @param result
-     * @return
-     */
+//    /**
+//     * najde podle jmena elementu a listu jeho hodnot seznam vsech objektu v collekci
+//     *
+//     * @param <T>
+//     * @param <E>
+//     * @param c
+//     * @param collection
+//     * @param name
+//     * @param inListQuery
+//     * @param fields
+//     * @param result
+//     * @return
+//     */
 //    public <T extends IEntity, E> List<E> find(Class<T> c, String collection, String name, Linq<String> inListQuery, String fields, List<E> result) {
 //        return find(c, collection, QueryBuildHelper.qbInList(name, inListQuery), fields, result);
 //    }
@@ -277,7 +277,7 @@ public class MongoConn {
                  * "nscannedObjects" : 0, "n" : 0, "nfound" : 0, "timeMicros" : 7568 }, "ok" : 1
                  */
                 for (DBObject o : (List<DBObject>) cr.get("results")) {
-                    out.add((E) IEntity.of(o.toMap()));
+                    //out.add((E) IEntity.of(o.toMap()));
                 }
             }
 
@@ -314,7 +314,7 @@ public class MongoConn {
              */
             if (dbo != null) {
                 /* zkonvertuj ho do Mo** */
-                return (E) IEntity.of(dbo.toMap());
+                //return (E) IEntity.of(dbo.toMap());
             }
 
         }
@@ -442,7 +442,7 @@ public class MongoConn {
      * @return
      */
     public boolean insert(String collection, IEntity e) {
-        DBObject o = new BasicDBObject( e.serialize());
+        DBObject o = new BasicDBObject( e.toMap());
         return insert(collection, o);
     }
 
@@ -470,7 +470,7 @@ public class MongoConn {
      * @return
      */
     public boolean save(String collection, IEntity e) {
-        DBObject o = new BasicDBObject( e.serialize());
+        DBObject o = new BasicDBObject( e.toMap());
         return save(collection, (DBObject) o);
     }
 
@@ -519,11 +519,11 @@ public class MongoConn {
         /**
          * jen zjisti co je prazdne a naplni to prazdnym objektama, ty funguji jako 'vsechno'
          */
-        return aggregate(collection,
-                StringUtils(matchQuery) ? new BasicDBObject() : (DBObject) JSON.parse(matchQuery),
-                new BasicDBObject(),
-                Strings.isNullOrEmpty(groupQuery) ? new BasicDBObject() : (DBObject) JSON.parse(groupQuery));
-
+//        return aggregate(collection,
+//                StringUtils(matchQuery) ? new BasicDBObject() : (DBObject) JSON.parse(matchQuery),
+//                new BasicDBObject(),
+//                StringUtils.isNullOrEmpty(groupQuery) ? new BasicDBObject() : (DBObject) JSON.parse(groupQuery));
+        return null;
     }
 
     /**
@@ -564,13 +564,13 @@ public class MongoConn {
      * @param g
      * @return
      */
-    public static String guidInQuery(Iterable<String> g) {
-        return "{ '_id' : { $in : [ " + Strings.join(",", g, "{ $oid : '%s' }") + " ] }}";
-    }
-
-    public static String guidInQuery(Collection<String> g) {
-        return "{ '_id' : { $in : [ " + Strings.join(",", g, "{ $oid : '%s' }") + " ] }}";
-    }
+//    public static String guidInQuery(Iterable<String> g) {
+//        return "{ '_id' : { $in : [ " + Strings.join(",", g, "{ $oid : '%s' }") + " ] }}";
+//    }
+//
+//    public static String guidInQuery(Collection<String> g) {
+//        return "{ '_id' : { $in : [ " + Strings.join(",", g, "{ $oid : '%s' }") + " ] }}";
+//    }
 
     /**
      * regular expression for box identity found
@@ -606,9 +606,9 @@ public class MongoConn {
         /**
          * jestli se nema vypisovat kompletni dokument, je potreba: { "_id" : 1 } napriklad
          */
-        if (!Strings.isNullOrEmpty(fields)) {
-            dbo.put("project", (DBObject) JSON.parse(fields));
-        }
+//        if (!Strings.isNullOrEmpty(fields)) {
+//            dbo.put("project", (DBObject) JSON.parse(fields));
+//        }
 
         return dbo;
     }
