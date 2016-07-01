@@ -17,6 +17,14 @@ public interface INode extends IEntity, IConditioned {
     Collection<ITag> tags();
     
     Collection<ILink> links();
+
+    /**
+     * vlozi jakoukoliv entitu do Nodu, on si ho uz spravne zaradi
+     *
+     * @param e
+     * @return
+     */
+    INode put( IEntity e );
     
     Collection<IData> datas();
 }

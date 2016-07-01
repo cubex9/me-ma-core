@@ -8,6 +8,7 @@ import eu.cxn.mema.skelet.ITag;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by kubasek on 7/1/2016.
@@ -49,8 +50,9 @@ public class Link extends Entity implements ILink {
 
     @Override
     public Collection<ITag> tags() {
-        return null;
+        return tags.stream().map( t -> (ITag)net().get(t)).collect(Collectors.toList());
     }
+
 
     @Override
     public double getWeight() {

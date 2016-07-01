@@ -22,6 +22,6 @@ public class Tag extends Entity implements ITag {
 
     @Override
     public String toString() {
-        return name + "("+id()+")";
+        return "#" + name + "(" + id() + ")";
     }
 }

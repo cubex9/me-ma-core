@@ -3,7 +3,10 @@ package eu.cxn.mema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.cxn.mema.skelet.*;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -12,10 +15,13 @@ import java.util.Collection;
 public class Node extends Entity implements INode {
 
     @JsonProperty
-    String name;
+    private String name;
 
     @JsonProperty
-    String type;
+    private String type;
+
+    @JsonProperty
+    private List<String> tags;
 
     public Node() {
     }
@@ -37,7 +43,7 @@ public class Node extends Entity implements INode {
 
     @Override
     public Collection<ITag> tags() {
-        return null;
+        return tags == null ? Arrays.asList() : tags.stream().map(t -> (ITag)net().get(t)).collect(Collectors.toList());
     }
 
     @Override
@@ -51,7 +57,19 @@ public class Node extends Entity implements INode {
     }
 
     @Override
+    public INode put( IEntity e ) {
+        if( e instanceof ITag ) {
+            tags.add(e.id());
+        }
+
+        return this;
+    }
+
+    @Override
     public String toString() {
-        return name + "("+id()+")";
+        Collection<ITag> tags = tags();
+
+        return name + "("+id()+")"
+            + ( tags.isEmpty() ? "" : " #" + tags.stream().map( t -> t.getName()).collect(Collectors.joining(", #")));
     }
 }
