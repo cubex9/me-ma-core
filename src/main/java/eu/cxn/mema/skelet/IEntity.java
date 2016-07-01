@@ -10,11 +10,13 @@ import java.util.Map;
  */
 public interface IEntity {
 
-    String guid();
+    String id();
 
     Class<?> clazz();
 
     INet net();
+
+    IEntity setNet(INet net);
 
     /**
      *

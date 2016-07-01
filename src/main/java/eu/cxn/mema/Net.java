@@ -1,11 +1,10 @@
 package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.cxn.mema.skelet.IEntity;
 import eu.cxn.mema.skelet.INet;
-import eu.cxn.mema.skelet.ILink;
-import eu.cxn.mema.skelet.INode;
-import eu.cxn.mema.skelet.ITag;
-import java.util.Collection;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,27 +16,33 @@ public class Net extends Entity implements INet {
     @JsonProperty
     private String name;
 
-    @JsonProperty
-    private Map<String, Node> nodes;
+    private Map<String,IEntity> entities;
 
-    @JsonProperty
-    private Map<String, Link> links;
+    public Net() {
+    }
 
-    @JsonProperty
-    private Map<String, Tag> tags;
+    public Net( String name ) {
+        this.name = name;
+    }
 
-    @Override
-    public Collection<? extends INode> nodes() {
-        return nodes.values();
+    public static INet of( String name, String... entities ) {
+        Net n = new Net(name);
+        n.entities = new HashMap<>();
+        for( String e : entities ) {
+            IEntity ent = Entity.of( e );
+            n.entities.put( ent.guid(), ent );
+        }
+
+        return n;
     }
 
     @Override
-    public Collection<? extends ILink> links() {
-        return links.values();
+    public String getName() {
+        return name;
     }
 
     @Override
-    public Collection<? extends ITag> tags() {
-        return tags.values();
+    public IEntity get( String id ) {
+        return entities.get(id);
     }
 }

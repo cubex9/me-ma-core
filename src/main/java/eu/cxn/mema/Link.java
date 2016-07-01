@@ -7,41 +7,44 @@ import eu.cxn.mema.skelet.ILinkType;
 import eu.cxn.mema.skelet.INode;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by kubasek on 7/1/2016.
  */
 public class Link extends Entity implements ILink {
 
+    @JsonProperty
+    private String off;
 
     @JsonProperty
-    private Node off;
+    private String target;
 
     @JsonProperty
-    private Node target;
+    private String type;
 
     @JsonProperty
-    private LinkType type;
-
-    @JsonProperty
-    private Map<String,Tag> tags;
+    private List<String> tags;
 
     @JsonProperty
     private double weight;
 
+    public Link() {
+    }
+
     @Override
     public INode getOff() {
-        return off;
+        return (INode)net().get(off);
     }
 
     @Override
     public INode getTarget() {
-        return target;
+        return (INode)net().get(target);
     }
 
     @Override
     public ILinkType getType() {
-        return type;
+        return null;
     }
 
     @Override

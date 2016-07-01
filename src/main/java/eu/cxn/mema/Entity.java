@@ -19,7 +19,7 @@ public class Entity implements IEntity {
     private INet net;
 
     @JsonProperty
-    private String guid;
+    private String id;
 
     @JsonProperty
     private String clazz;
@@ -34,39 +34,24 @@ public class Entity implements IEntity {
         return net;
     }
 
+    @Override
+    public IEntity setNet( INet net) {
+        this.net = net;
+        return this;
+    }
+
 
     public static Entity of( String json ) {
         return (Entity)IEntity.read(json);
     }
 
 
-//    public Map serialize() {
-//        /* pokud nebyl nikdy pouzity, je potreba inicializovat id */
-//        info( "SERIALIZE: " + clazz() + " [ "+guid()+" ]");
-//
-//        /* pak uz standartni process */
-//        Map<String, Object> res = new LinkedHashMap<>();
-//        res.put("_id", guid);
-//        res.put("clazz", clazz());
-//
-//        Oma.write(this);
-//
-//        return res;
-//    }
-//
-//    @Override
-//    public <T extends IEntity> T deserialize(Map m) {
-//
-//
-//        return null;
-//    }
-
     @Override
-    public String guid() {
-        if (guid == null) {
-            guid = ObjectId.get().toString();
+    public String id() {
+        if (id == null) {
+            id = ObjectId.get().toString();
         }
-        return guid;
+        return id;
     }
 
     @Override

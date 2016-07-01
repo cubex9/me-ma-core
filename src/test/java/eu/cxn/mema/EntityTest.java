@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class EntityTest {
 
     String json = "{" +
-            "guid : '4546576756765756'," +
+            "id : '4546576756765756'," +
             "clazz : 'Entity'" +
             "}";
 

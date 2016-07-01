@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class NodeTest {
 
     String json = "{" +
-            "guid : '4546576756765756'," +
+            "id : '4546576756765756'," +
             "clazz : 'Node'," +
             "name : 'TEST-NODE'" +
             "}";
