@@ -15,7 +15,7 @@ public class NetTest {
         "{ id: '4', clazz: 'Node', name: 'Cup' }",
 
         "{ id: '5', clazz: 'Link', off: '4', target: '1' }",
-        "[ id: '6', clazz: 'Link', off: '4', target: '2' }",
+        "{ id: '6', clazz: 'Link', off: '4', target: '2' }",
         "{ id: '7', clazz: 'Link', off: '4', target: '3' }",
 
         "{ id: '8', clazz: 'Tag', name: 'food' }"

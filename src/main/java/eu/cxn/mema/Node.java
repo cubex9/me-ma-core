@@ -36,7 +36,7 @@ public class Node extends Entity implements INode {
     }
 
     @Override
-    public Collection<INodeTag> tags() {
+    public Collection<ITag> tags() {
         return null;
     }
 
@@ -50,4 +50,8 @@ public class Node extends Entity implements INode {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "NODE: " + name;
+    }
 }

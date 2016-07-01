@@ -23,7 +23,7 @@ public class EntityTest {
     public void readWrite() {
 
         Entity e = Entity.of( json );
-        assertEquals( "4546576756765756", e.guid());
+        assertEquals( "4546576756765756", e.id());
     }
 
 }

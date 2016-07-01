@@ -30,7 +30,7 @@ public class Net extends Entity implements INet {
         n.entities = new HashMap<>();
         for( String e : entities ) {
             IEntity ent = Entity.of( e );
-            n.entities.put( ent.guid(), ent );
+            n.entities.put( ent.id(), ent );
         }
 
         return n;

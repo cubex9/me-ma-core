@@ -14,7 +14,7 @@ public interface INode extends IEntity, IConditioned {
     
     Collection<IFeature> features();
     
-    Collection<INodeTag> tags();
+    Collection<ITag> tags();
     
     Collection<ILink> links();
     

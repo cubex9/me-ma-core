@@ -14,7 +14,7 @@ public interface ILink extends IEntity, IConditioned {
     
     ILinkType getType();
     
-    Collection<ILinkTag> tags();
+    Collection<ITag> tags();
     
     double getWeight();
 }

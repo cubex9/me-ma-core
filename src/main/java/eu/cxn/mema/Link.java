@@ -2,9 +2,9 @@ package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.cxn.mema.skelet.ILink;
-import eu.cxn.mema.skelet.ILinkTag;
 import eu.cxn.mema.skelet.ILinkType;
 import eu.cxn.mema.skelet.INode;
+import eu.cxn.mema.skelet.ITag;
 
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +48,7 @@ public class Link extends Entity implements ILink {
     }
 
     @Override
-    public Collection<ILinkTag> tags() {
+    public Collection<ITag> tags() {
         return null;
     }
 
