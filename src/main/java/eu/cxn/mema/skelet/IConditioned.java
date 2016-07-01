@@ -1,19 +1,33 @@
 package eu.cxn.mema.skelet;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
+ * Podminky
  *
  * @author kubasek
  */
 public interface IConditioned {
     
-    /* zdali pak je za danych podminek platny ? */
-    boolean isValid( IConditioned c );
+    /**
+     *  zdali pak je za danych podminek platny ?
+     */
+    default boolean isValid( IConditioned c ) {
+        return true;
+    }
     
-    /* za danych podminek muze objekt transmutovat na jiny */
-    IConditioned transmutedTo( IConditioned c );
+    /**
+     *  za danych podminek muze objekt transmutovat na jiny
+     */
+    default IConditioned transmutedTo( IConditioned c ) {
+        return c;
+    }
     
-    /* za jakych podminek je feature platna */
-    Collection<ICondition> conditions();
+    /**
+     *  za jakych podminek je feature platna
+     */
+    default Collection<ICondition> conditions() {
+        return new LinkedList<>();
+    }
 }

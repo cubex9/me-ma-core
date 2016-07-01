@@ -170,7 +170,7 @@ public class AopHandler implements InvocationHandler {
 //                });
 //            }
 //            /**
-//             * invokace/volani vlastni metody + nastaveni antirecursive call TODO synchronize pro
+//             * invokace/volani vlastni metody + nastaveni antirecursive call, synchronize pro
 //             * isin
 //             */
 //            result = m.invoke(obj, aopArgs == null ? args : aopArgs);

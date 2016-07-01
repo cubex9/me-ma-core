@@ -1,5 +1,6 @@
 package eu.cxn.mema;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.cxn.mema.skelet.INet;
 import eu.cxn.mema.skelet.ILink;
 import eu.cxn.mema.skelet.INode;
@@ -11,26 +12,32 @@ import java.util.Map;
  *
  * @author kubasek
  */
-public class Net implements INet {
+public class Net extends Entity implements INet {
 
-    private Map<String, INode> nodes;
+    @JsonProperty
+    private String name;
 
-    private Map<String, ILink> links;
+    @JsonProperty
+    private Map<String, Node> nodes;
 
-    private Map<String, ITag> tags;
+    @JsonProperty
+    private Map<String, Link> links;
+
+    @JsonProperty
+    private Map<String, Tag> tags;
 
     @Override
-    public Collection<INode> nodes() {
+    public Collection<? extends INode> nodes() {
         return nodes.values();
     }
 
     @Override
-    public Collection<ILink> links() {
+    public Collection<? extends ILink> links() {
         return links.values();
     }
 
     @Override
-    public Collection<ITag> tags() {
+    public Collection<? extends ITag> tags() {
         return tags.values();
     }
 }

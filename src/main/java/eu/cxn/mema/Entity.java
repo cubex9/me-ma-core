@@ -1,11 +1,12 @@
 package eu.cxn.mema;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.cxn.mema.skelet.IEntity;
+import eu.cxn.mema.skelet.INet;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 /**
@@ -14,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Entity implements IEntity {
     private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
-    
+
+    private INet net;
+
     @JsonProperty
     private String guid;
 
@@ -24,8 +27,13 @@ public class Entity implements IEntity {
     private Class<?> cls;
 
     public Entity() {
-
     }
+
+    @Override
+    public INet net() {
+        return net;
+    }
+
 
     public static Entity of( String json ) {
         return (Entity)IEntity.read(json);

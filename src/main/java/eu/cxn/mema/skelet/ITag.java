@@ -6,5 +6,5 @@ package eu.cxn.mema.skelet;
  */
 public interface ITag extends IEntity, IConditioned {
     
-    String name();
+    String getName();
 }

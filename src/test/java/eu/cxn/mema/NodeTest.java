@@ -12,14 +12,14 @@ public class NodeTest {
     String json = "{" +
             "guid : '4546576756765756'," +
             "clazz : 'Node'," +
-            "name : 'pepa'" +
+            "name : 'TEST-NODE'" +
             "}";
 
     @Test
     public void readNode() {
 
         Node n = (Node)Entity.of( json );
-        assertEquals("pepa", n.getName());
+        assertEquals("TEST-NODE", n.getName());
     }
 }
 

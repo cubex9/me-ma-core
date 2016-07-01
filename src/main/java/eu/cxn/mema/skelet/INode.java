@@ -8,9 +8,9 @@ import java.util.Collection;
  */
 public interface INode extends IEntity, IConditioned {
     
-    String name();
-    
-    INodeType type();
+    String getName();
+
+    INodeType getType();
     
     Collection<IFeature> features();
     

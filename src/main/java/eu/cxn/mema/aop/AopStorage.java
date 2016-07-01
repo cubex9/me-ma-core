@@ -39,7 +39,7 @@ public class AopStorage {
      */
     public static Stream<Aspect> get(Object concrete, Method m) {
         List<Aspect> res = new ArrayList<>();
-        // TODO todle bude potrebovat hoooodne optimalizovat, inteligente indextation
+        // TODO: todle bude potrebovat hoooodne optimalizovat, inteligente indextation
         for (Aspect a : eventitiez) {
             if (a.isIt(concrete, m)) {
                 res.add(a);

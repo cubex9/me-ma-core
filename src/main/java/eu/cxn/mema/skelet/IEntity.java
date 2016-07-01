@@ -2,7 +2,6 @@ package eu.cxn.mema.skelet;
 
 import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.Entity;
-import static eu.cxn.mema.xlo.Xlo.err;
 import java.util.Map;
 
 /**
@@ -15,16 +14,32 @@ public interface IEntity {
 
     Class<?> clazz();
 
+    INet net();
+
+    /**
+     *
+     * @param data
+     * @param <T>
+     * @return
+     */
     static <T extends IEntity> T read(String data) {
         Entity ie = (Entity)Oma.read(data, Entity.class);
         return (T)Oma.read(data, ie.clazz());
     }
 
-
+    /**
+     *
+     * @param <T>
+     * @return
+     */
     default <T extends IEntity> String write() {
         return Oma.write(this);
     }
 
+    /**
+     *
+     * @return
+     */
     default Map toMap() {
         return null;
     }

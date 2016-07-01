@@ -8,13 +8,13 @@ import java.util.Collection;
  */
 public interface ILink extends IEntity, IConditioned {
     
-    INode off();
+    INode getOff();
     
-    INode target();
+    INode getTarget();
     
-    ILinkType type();
+    ILinkType getType();
     
     Collection<ILinkTag> tags();
     
-    double weight();
+    double getWeight();
 }

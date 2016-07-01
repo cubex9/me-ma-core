@@ -6,5 +6,5 @@ package eu.cxn.mema.skelet;
  */
 public interface INodeType extends INodeTag {
 
-    String name();
+    String getName();
 }
