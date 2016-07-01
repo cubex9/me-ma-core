@@ -10,8 +10,6 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import eu.cxn.mema.skelet.IEntity;
 import eu.cxn.mema.xlo.Xlo;
-import eu.teta.elements.mongo.Mobject;
-import eu.teta.util.Xlo;
 import java.util.ArrayList;
 import java.util.List;
 
