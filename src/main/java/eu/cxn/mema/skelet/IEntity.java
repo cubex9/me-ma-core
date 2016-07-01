@@ -1,8 +1,7 @@
 package eu.cxn.mema.skelet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.cxn.mema.json.Oma;
 import static eu.cxn.mema.xlo.Xlo.err;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -11,37 +10,18 @@ import java.util.Map;
  */
 public interface IEntity {
 
-    long id();
+    String guid();
 
-    String clazz();
+    Class<?> clazz();
+
     
-    ObjectMapper om();
-    
-    default <T extends IEntity> T read(String data) {
-        try {
-            return read((Map)om().readValue(data, Map.class));
-        } catch ( IOException ioe ) {
-            err("Can't read data: " + data, ioe);
-        }
-        return null;
+    static <T extends IEntity> T read(String data) {
+            IEntity ie = (IEntity)Oma.read(data, IEntity.class);
+            return (T)Oma.read(data, ie.clazz());
     }
+
     
-    default <T extends IEntity> T read( Map m) {
-         try {
-            T e = (T) Class.forName((String) m.get("clazz")).newInstance();
-            return e.deserialize(m);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            err("Can't inicialize IEntity: " + m.get("clazz"), ex);
-        }
-        return null;       
-    }
-    
-    default String write() {
-        try {
-            return om().writeValueAsString(this);
-        } catch( Exception e ) {
-            err("Can't write",e);
-        }
-        return null;
+    static <T extends IEntity> String write( T o ) {
+        return Oma.write(o);
     }
 }

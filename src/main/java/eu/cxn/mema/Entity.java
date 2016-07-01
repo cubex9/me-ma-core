@@ -3,6 +3,8 @@ package eu.cxn.mema;
 import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.skelet.IEntity;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,34 +15,45 @@ import static eu.cxn.mema.xlo.Xlo.info;
  *
  * @author kubasek
  */
-public abstract class Entity implements IEntity {
+public class Entity implements IEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
     
 
     private ObjectId guid;
 
     private String clazz;
 
-    @Override
-    public Map serialize() {
-        /* pokud nebyl nikdy pouzity, je potreba inicializovat id */
-        info( "SERIALIZE: " + clazz() + " [ "+guid()+" ]");
-        
-        /* pak uz standartni process */
-        Map<String, Object> res = new LinkedHashMap<>();
-        res.put("_id", guid);
-        res.put("clazz", clazz());
+    private Class<?> cls;
 
-        Oma.write(this);
+    public Entity() {
 
-        return res;
     }
 
-    @Override
-    public <T extends IEntity> T deserialize(Map m) {
-        
-        
-        return null;
+    public static Entity of( String json ) {
+        return (Entity)IEntity.read(json);
     }
+
+
+//    public Map serialize() {
+//        /* pokud nebyl nikdy pouzity, je potreba inicializovat id */
+//        info( "SERIALIZE: " + clazz() + " [ "+guid()+" ]");
+//
+//        /* pak uz standartni process */
+//        Map<String, Object> res = new LinkedHashMap<>();
+//        res.put("_id", guid);
+//        res.put("clazz", clazz());
+//
+//        Oma.write(this);
+//
+//        return res;
+//    }
+//
+//    @Override
+//    public <T extends IEntity> T deserialize(Map m) {
+//
+//
+//        return null;
+//    }
 
     @Override
     public String guid() {
@@ -51,14 +64,14 @@ public abstract class Entity implements IEntity {
     }
 
     @Override
-    public String clazz() {
+    public Class<?> clazz() {
         try {
-            if (clazz == null) {
-                clazz = getClass().getName();
+            if (cls == null) {
+                cls = getClass();
             }
-            return clazz;
+            return cls;
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            LOG.error( "Cant get class: ", ex);
         }
 
         return null;

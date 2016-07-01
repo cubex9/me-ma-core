@@ -6,22 +6,24 @@
 package eu.cxn.mema;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
- *
  * @author kubasek
  */
 public class EntityTest {
-    
-    public EntityTest() {
-    }
+
+    String json =
+            "{" +
+            "'id' : '4546576756765756'," +
+            "'clazz' : 'Entity' " +
+            "}";
 
     @Test
-    public void serialize() {
+    public void readWrite() {
+
+        Entity e = Entity.of( json );
+        assertEquals( "4546576756765756", e.guid());
     }
-    
-    @Test
-    public void deserialize() {
-    }    
 }

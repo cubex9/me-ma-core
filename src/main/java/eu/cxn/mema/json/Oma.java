@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * @author kubasek
@@ -54,6 +56,21 @@ public class Oma {
         } catch (JsonProcessingException jpe) {
             LOG.error("Can't process object to json: {}", o, jpe);
             throw new IllegalStateException(jpe);
+        }
+    }
+
+    /**
+     * read from string
+     * @param data
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static Object read(String data, Class<?> clazz) {
+        try {
+            return get().readValue(data, clazz);
+        } catch( IOException ioe ) {
+            LOG.error( "Cant read json data: " + data, ioe );
         }
     }
 
