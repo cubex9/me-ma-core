@@ -15,6 +15,7 @@ public class MemaApi {
 
     @GET
     @Produces("text/plain")
+    @Path("api")
     public String api() {
         // Return some cliched textual content
         return "This is me-ma-core rest service";
