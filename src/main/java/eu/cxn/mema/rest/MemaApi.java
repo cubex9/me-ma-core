@@ -9,14 +9,12 @@ import javax.ws.rs.Path;
  * Created by kubasek on 7/2/2016.
  */
 
-// The Java class will be hosted at the URI path "/helloworld"
-@Path("/")
+@Path("/api")
+@Produces("text/plain")
 public class MemaApi {
 
     @GET
-    @Produces("text/plain")
-    @Path("api")
-    public String api() {
+    public String getApi() {
         // Return some cliched textual content
         return "This is me-ma-core rest service";
     }
