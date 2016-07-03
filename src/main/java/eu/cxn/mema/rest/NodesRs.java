@@ -27,7 +27,7 @@ public class NodesRs {
      */
     @GET
     @Path("/net")
-    @Produces("application/json")
+    @Produces("application/json; charset=utf-8")
     public String getNet() {
         return InMemory.net.toJson();
     }

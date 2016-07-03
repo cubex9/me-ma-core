@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>me*ma</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/libs/jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/xi/Net.js"></script>
+    <script type="text/javascript" src="js/xi/Node.js"></script>
+    <script type="text/javascript" src="js/xi/Link.js"></script>
+    <script type="text/javascript" src="js/xi/Tag.js"></script>
+</head>
+<body>
+<div>me*ma</div>
+<div id='m1'>menu...</div>
+<div id='g1'>graph...</div>
+<script type="text/javascript">
+
+    var jqxhr = $.getJSON("rest/nodes/net")
+            .done(function (data) {
+                net = new cxn.Net(data);
+                net.render('g1');
+
+                console.log("FEFE: rest/nodes/net -> " + net.toString());
+            })
+            .fail(function () {
+                console.log("error");
+            });
+
+
+</script>
+</body>
+</html>
