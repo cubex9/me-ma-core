@@ -1,6 +1,6 @@
 package eu.cxn.mema.rest;
 
-import eu.cxn.mema.StaticStore;
+import eu.cxn.mema.data.InMemory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,11 +16,19 @@ public class NodesRs {
     @GET
     @Path("/info")
     public String info() {
-        return StaticStore.net.toString();
+        return InMemory.net.toString();
     }
 
+    /**
+     * vraci json podobu netu, kdy vserchny entity nalezneme v mape klicovane pomoci id,
+     * odkazy na ostatni nody jsou opet klicovane by id
+     *
+     * @return
+     */
     @GET
-    public String getList() {
-        return "nic";
+    @Path("/net")
+    @Produces("application/json")
+    public String getNet() {
+        return InMemory.net.toJson();
     }
 }

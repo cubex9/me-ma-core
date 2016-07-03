@@ -9,4 +9,6 @@ public interface INet {
     String getName();
 
     IEntity get( String id);
+
+    String toJson();
 }

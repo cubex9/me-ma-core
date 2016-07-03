@@ -1,5 +1,6 @@
 package eu.cxn.mema;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.cxn.mema.skelet.ILink;
 import eu.cxn.mema.skelet.ILinkType;
@@ -34,16 +35,19 @@ public class Link extends Entity implements ILink {
     }
 
     @Override
+    @JsonIgnore
     public INode getOff() {
         return (INode)net().get(off);
     }
 
     @Override
+    @JsonIgnore
     public INode getTarget() {
         return (INode)net().get(target);
     }
 
     @Override
+    @JsonIgnore
     public ILinkType getType() {
         return null;
     }

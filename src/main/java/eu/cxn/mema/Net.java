@@ -1,6 +1,7 @@
 package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.skelet.IEntity;
 import eu.cxn.mema.skelet.INet;
 
@@ -16,6 +17,7 @@ public class Net extends Entity implements INet {
     @JsonProperty
     private String name;
 
+    @JsonProperty
     private Map<String, IEntity> entities;
 
     public Net() {
@@ -55,5 +57,10 @@ public class Net extends Entity implements INet {
                 + e.getValue().stream().map(v -> v.toString()).collect(Collectors.joining(",\n\t"))
             )
             .collect(Collectors.joining("\n"));
+    }
+
+    @Override
+    public String toJson() {
+        return Oma.write(this);
     }
 }
