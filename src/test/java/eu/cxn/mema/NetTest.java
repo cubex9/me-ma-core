@@ -1,6 +1,6 @@
 package eu.cxn.mema;
 
-import eu.cxn.mema.skelet.INet;
+import eu.cxn.mema.skelet.*;
 import org.junit.Test;
 
 /**

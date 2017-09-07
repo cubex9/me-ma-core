@@ -13,6 +13,7 @@ cxn.Net = function (data) {
 cxn.Net.prototype = {
     // nacte sam sebe ze zdroje
     parse: function (o) {
+        // 
         this.name = o.name;
         for (var x in o.entities) {
             var e = o.entities[x];
@@ -24,7 +25,6 @@ cxn.Net.prototype = {
                 this.entities[e.id] = new cxn.Tag(this, e);
             }
         }
-        return this;
     },
     // vlozi nebo prepise objekt
     put: function (o) {
@@ -36,7 +36,8 @@ cxn.Net.prototype = {
         return this.elements[id];
     },
 
-    render: function (n) {
+    render: function (c) {
+        var ctx = c.getContext("2d");
     }
 };
 
