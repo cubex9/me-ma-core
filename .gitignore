@@ -2,3 +2,5 @@
 classes/artifacts
 web/js/libs/ace
 target
+*.iml
+nb-configuration.xml
