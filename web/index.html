@@ -17,15 +17,15 @@
 <script type="text/javascript">
 
     var jqxhr = $.getJSON("rest/nodes/net")
-            .done(function (data) {
-                net = new cxn.Net(data);
-                net.render('g1');
+        .done(function (data) {
+            net = new cxn.Net(data);
+            net.render('g1');
 
-                console.log("FEFE: rest/nodes/net -> " + net.toString());
-            })
-            .fail(function () {
-                console.log("error");
-            });
+            console.log("FEFE: rest/nodes/net -> " + net.toString());
+        })
+        .fail(function () {
+            console.log("error");
+        });
 
 
 </script>
