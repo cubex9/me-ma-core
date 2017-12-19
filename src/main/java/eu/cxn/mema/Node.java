@@ -1,7 +1,9 @@
 package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.cxn.mema.skelet.*;
+import com.fasterxml.jackson.annotation.JsonView;
+import eu.cxn.mema.json.Views;
+import eu.cxn.mema.skeleton.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,12 +17,15 @@ import java.util.stream.Collectors;
 public class Node extends Entity implements INode {
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String name;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String type;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private List<String> tags;
 
     public Node() {

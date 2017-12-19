@@ -1,4 +1,4 @@
-package eu.cxn.mema.skelet;
+package eu.cxn.mema.skeleton;
 
 import java.util.Collection;
 import java.util.LinkedList;

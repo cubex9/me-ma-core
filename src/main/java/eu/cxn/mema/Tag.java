@@ -1,7 +1,9 @@
 package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.cxn.mema.skelet.ITag;
+import com.fasterxml.jackson.annotation.JsonView;
+import eu.cxn.mema.json.Views;
+import eu.cxn.mema.skeleton.ITag;
 
 /**
  * Created by kubasek on 7/1/2016.
@@ -9,6 +11,7 @@ import eu.cxn.mema.skelet.ITag;
 public class Tag extends Entity implements ITag {
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     String name;
 
     public Tag() {

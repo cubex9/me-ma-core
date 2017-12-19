@@ -8,7 +8,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import eu.cxn.mema.skelet.IEntity;
+import eu.cxn.mema.skeleton.IEntity;
 import eu.cxn.mema.xlo.Xlo;
 import java.util.ArrayList;
 import java.util.List;

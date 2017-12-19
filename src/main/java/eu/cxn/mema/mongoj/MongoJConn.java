@@ -2,87 +2,168 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.cxn.mema.mongo;
+package eu.cxn.mema.mongoj;
 
 import com.mongodb.*;
-import com.mongodb.util.*;
+import com.mongodb.util.JSON;
+import eu.cxn.mema.json.Views;
+import eu.cxn.mema.mongo.MongoEnu;
 import eu.cxn.mema.skeleton.IEntity;
 import eu.cxn.mema.xlo.Xlo;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * MongoDB connector, spis zapamatovani nekterych postupu pri pripojovani a praci s mongem
- *
+ * MongoDB connector, connect to database
+ * <p>
  * <pre>
  * {@literal MongoConn mog = MongoConn.connect( "localhost", "test",
- * new MongoAuth( "useName", "passws" )
+ *  new MongoAuth( "useName", "passws" )
  * );
  *
- * MongoColl coll = mog.db.getCollection( "collectionName" );
+ * MongoJColl coll = mog.db().collection( "collectionName" );
  *
  * }
  * </pre>
  *
- *
  * @author kubasek
  */
-public class MongoConn {
+
+public class MongoJConn {
 
     /**
-     * databazicka
+     * database driver connection
      */
     public DB db;
+
+    /**
+     * view rika ktere fieldy se budou ukladat/nacitat z databaze,
+     * pomoci:
+     * <p>
+     * <pre>
+     *
+     *     @JsonProperty
+     *     @JsonView( Views.Db.class ) // for example
+     *     private String name;
+     *
+     *
+     * </pre>
+     */
+    private Class view;
 
     /**
      * exit status remember this.. ;-)
      */
     public MongoEnu.ReturnCodes exitStatus = MongoEnu.ReturnCodes.OK;
+
     protected String exitMessage = null;
 
-    public MongoConn() {
+    private MongoJConn(DB db, Class view) {
+        this.db = db;
+        this.view = view;
     }
 
-    public MongoEnu.ReturnCodes lastResult() {
-        return exitStatus;
+    public DB db() {
+        return db;
     }
 
-    public String lastErrorMessage() {
-        return exitMessage;
+    public Class viewClass() {
+        return view;
+    }
+
+
+    public static MongoJConn connect(MongoJCredentials credentials) throws MongoJException {
+        return connect(credentials.host, credentials.database, credentials.auth, Views.Db.class);
     }
 
     /**
-     * vytvori spojeni na colleci s urcitym typem, tim se dost zjednodusi vsechny zapisy
+     * host je nutny dycky db jen kdyz ji chceme rovnou otevrit to same pro autentificator
      *
-     * @param <T>
-     * @param cls
-     * @param collection
+     * @param host
+     * @param database
+     * @param auth
      * @return
      */
-    public <T extends IEntity> IMongoCollection<T> createMoCoColle(Class<T> cls, String collection) {
-        if (collection != null) {
-            return new MongoCollection(cls, this, collection);
+    public static MongoJConn connect(String host, String database, MongoJAuth auth, Class view) throws MongoJException {
+
+        try {
+
+            /* connection try */
+            MongoJConn mog = new MongoJConn(Mongo.connect(new DBAddress(host, database)), view);
+
+            /* authentisation onli if */
+            if (mog.db() != null && auth != null) {
+                mog.db().authenticate(auth.getUser(), auth.getPasswd().toCharArray());
+            }
+
+            return mog;
+
+
+        } catch (UnknownHostException uhe) {
+            throw new MongoJException(MongoJEnums.ReturnCodes.UNKNOWN_HOST, uhe.getMessage());
+
+        } catch (IllegalStateException ise) {
+            throw new MongoJException(MongoJEnums.ReturnCodes.ILLEGAL_STATE, ise.getMessage());
         }
-        return null;
     }
 
+
     /**
-     * vytvori spojeni na colleci s urcitym typem, tim se dost zjednodusi vsechny zapisy
+     * return collection with dedicated type and name
      *
-     * @param <T>
-     * @param cls
-     * @param collection
-     * @param losa
+     * @param name
      * @return
      */
-    public <T extends IEntity> IMongoCollection<T> createMoCoColle(Class<T> cls, String collection, boolean losa) {
-        IMongoCollection<T> mococolle = new MongoCollection(cls, this, collection);
-        return mococolle;
+    public <T> MongoJCollection<T> collection(Class<T> type, String name) {
+        return new MongoJCollection(this, type, name);
     }
 
     /**
-     * odhlaseni
+     * create and get collection by name
+     *
+     * @param name
+     * @return
+     */
+    public <T> MongoJCollection<T> createCollection(Class<T> type, String name) {
+
+        db.createCollection(name, null);
+        return collection(type, name);
+    }
+
+
+//    /**
+//     * vytvori spojeni na colleci s urcitym typem, tim se dost zjednodusi vsechny zapisy
+//     *
+//     * @param <T>
+//     * @param cls
+//     * @param collection
+//     * @return
+//     */
+//    public <T extends IEntity> IMongoCollection<T> createMoCoColle(Class<T> cls, String collection) {
+//        if (collection != null) {
+//            return new MongoCollection(cls, this, collection);
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * vytvori spojeni na colleci s urcitym typem, tim se dost zjednodusi vsechny zapisy
+//     *
+//     * @param <T>
+//     * @param cls
+//     * @param collection
+//     * @param losa
+//     * @return
+//     */
+//    public <T extends IEntity> IMongoCollection<T> createMoCoColle(Class<T> cls, String collection, boolean losa) {
+//        IMongoCollection<T> mococolle = new MongoCollection(cls, this, collection);
+//        return mococolle;
+//    }
+
+    /**
+     * odhlaseni, uzavreni
      */
     public synchronized void close() {
         if (db != null) {
@@ -90,7 +171,12 @@ public class MongoConn {
         }
     }
 
-    public synchronized boolean isUp() {
+    /**
+     * checkuje zdali je pripojeni aktivni
+     *
+     * @return
+     */
+    public synchronized boolean isOpen() {
         if (db != null) {
             if (exitStatus == MongoEnu.ReturnCodes.OK && db.getMongo().getConnector().isOpen()) {
                 return true;
@@ -101,45 +187,11 @@ public class MongoConn {
 
     }
 
-    /**
-     * host je nutny dycky db jen kdyz ji chceme rovnou otevrit to same pro autentificator
-     *
-     * @param host
-     * @param d
-     * @param auth
-     * @return
-     */
-    public static MongoConn connect(String host, String d, MongoAuth auth) {
-
-        MongoConn mog = new MongoConn();
-        mog.exitStatus = MongoEnu.ReturnCodes.ERROR;
-        try {
-            // connection try
-            mog.db = Mongo.connect(new DBAddress(host, d));
-            // authentisation onli if
-            if (mog.db != null && auth != null) {
-                mog.db.authenticate(auth.getUser(), auth.getPasswd().toCharArray());
-            }
-
-            mog.exitStatus = MongoEnu.ReturnCodes.OK;
-        } catch (UnknownHostException | IllegalStateException e) {
-            // check and write errors
-            if (e instanceof UnknownHostException) {
-                mog.exitStatus = MongoEnu.ReturnCodes.EXCEPTION_UNKNOWN_HOST;
-            }
-            if (e instanceof IllegalStateException) {
-                mog.exitStatus = MongoEnu.ReturnCodes.EXCEPTION_ILLEGALSTATE;
-            }
-            Xlo.err("MongoConn.connect: " + mog.exitStatus.name() + " -> " + e.getMessage());
-            mog.exitMessage = e.getMessage();
-        }
-        return mog;
-    }
 
     /**
      * list databazi ya ?
      */
-    public List<String> databaseList() {
+    public List<String> dbList() {
         if (db != null) {
             return db.getMongo().getDatabaseNames();
         } else {
@@ -172,14 +224,12 @@ public class MongoConn {
 
     /**
      * hleda query v kolekci a vysledek konvertuje na objekty Mo*
-     *
+     * <p>
      * nejde to tam sice zadat do definice ale T by mel implementovat nebo extendovat E, jinak
      * konverze pri vkladani do kolekce bude padat a to az za behu...
-     *
+     * <p>
      * funkce tedy vytvari z nalezenych DBObjektu, objekty Mo** a muze vracet Elementy napriklad:
      * List<Box> boxi = find( MoBox.class, "nejakakolekce",
-     *
-     *
      *
      * @param <T>
      * @param <E>
@@ -401,21 +451,6 @@ public class MongoConn {
     }
 
     /**
-     * zkontroluje jestli kolekce uz neexistuje a pripadne ji vytvori
-     *
-     * @param collection
-     * @return
-     */
-    public DBCollection createCollection(String collection) {
-        DBCollection coll = getCollection(collection);
-        if (db != null && coll == null) {
-            coll = db.createCollection(collection, null);
-        }
-
-        return coll;
-    }
-
-    /**
      * insert object into collection
      *
      * @param collection
@@ -441,7 +476,7 @@ public class MongoConn {
      * @return
      */
     public boolean insert(String collection, IEntity e) {
-        DBObject o = new BasicDBObject( e.toMap());
+        DBObject o = new BasicDBObject(e.toMap());
         return insert(collection, o);
     }
 
@@ -469,7 +504,7 @@ public class MongoConn {
      * @return
      */
     public boolean save(String collection, IEntity e) {
-        DBObject o = new BasicDBObject( e.toMap());
+        DBObject o = new BasicDBObject(e.toMap());
         return save(collection, (DBObject) o);
     }
 
@@ -610,5 +645,13 @@ public class MongoConn {
 //        }
 
         return dbo;
+    }
+
+    public MongoEnu.ReturnCodes lastResult() {
+        return exitStatus;
+    }
+
+    public String lastErrorMessage() {
+        return exitMessage;
     }
 }

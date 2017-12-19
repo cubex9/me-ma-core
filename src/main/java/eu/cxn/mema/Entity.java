@@ -2,8 +2,8 @@ package eu.cxn.mema;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.cxn.mema.skelet.IEntity;
-import eu.cxn.mema.skelet.INet;
+import eu.cxn.mema.skeleton.IEntity;
+import eu.cxn.mema.skeleton.INet;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,6 @@ public class Entity implements IEntity {
     @JsonProperty
     private String id;
 
-    @JsonProperty
-    private String clazz;
-
-    private Class<?> cls;
 
     public Entity() {
     }
@@ -40,12 +36,6 @@ public class Entity implements IEntity {
         return this;
     }
 
-
-    public static Entity of( String json ) {
-        return (Entity)IEntity.read(json);
-    }
-
-
     @Override
     public String id() {
         if (id == null) {
@@ -53,26 +43,4 @@ public class Entity implements IEntity {
         }
         return id;
     }
-
-    @Override
-    public Class<?> clazz() {
-        try {
-            if( clazz == null ) {
-                if( cls == null ) {
-                    cls = getClass();
-                }
-                clazz = cls.getName();
-            } else {
-                if( cls == null ) {
-                    cls = Class.forName("eu.cxn.mema." + clazz );
-                }
-            }
-            return cls;
-        } catch (Exception ex) {
-            LOG.error( "Cant get class: ", ex);
-        }
-
-        return null;
-    }
-
 }

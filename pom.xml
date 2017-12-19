@@ -14,6 +14,16 @@
     </properties>
     <name>me-ma-core</name>
     <dependencies>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.openejb</groupId>-->
+        <!--<artifactId>javaee-api</artifactId>-->
+        <!--<version>6.0-6</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.openejb</groupId>-->
+        <!--<artifactId>openejb-api</artifactId>-->
+        <!--<version>4.7.5</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>

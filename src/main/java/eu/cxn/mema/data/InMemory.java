@@ -1,7 +1,7 @@
 package eu.cxn.mema.data;
 
 import eu.cxn.mema.Net;
-import eu.cxn.mema.skelet.INet;
+import eu.cxn.mema.skeleton.INet;
 
 /**
  * Created by kubasek on 7/2/2016.

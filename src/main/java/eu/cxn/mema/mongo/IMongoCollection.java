@@ -6,7 +6,7 @@
 package eu.cxn.mema.mongo;
 
 import com.mongodb.DBObject;
-import eu.cxn.mema.skelet.IEntity;
+import eu.cxn.mema.skeleton.IEntity;
 import java.util.List;
 
 /**

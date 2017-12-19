@@ -1,9 +1,11 @@
 package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import eu.cxn.mema.json.Oma;
-import eu.cxn.mema.skelet.IEntity;
-import eu.cxn.mema.skelet.INet;
+import eu.cxn.mema.json.Views;
+import eu.cxn.mema.skeleton.IEntity;
+import eu.cxn.mema.skeleton.INet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 public class Net extends Entity implements INet {
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String name;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private Map<String, IEntity> entities;
 
     public Net() {

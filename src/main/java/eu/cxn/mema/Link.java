@@ -2,10 +2,9 @@ package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.cxn.mema.skelet.ILink;
-import eu.cxn.mema.skelet.ILinkType;
-import eu.cxn.mema.skelet.INode;
-import eu.cxn.mema.skelet.ITag;
+import com.fasterxml.jackson.annotation.JsonView;
+import eu.cxn.mema.json.Views;
+import eu.cxn.mema.skeleton.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,21 +13,26 @@ import java.util.stream.Collectors;
 /**
  * Created by kubasek on 7/1/2016.
  */
-public class Link extends Entity implements ILink {
+public class Link extends Entity implements ILink, IEntity {
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String off;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String target;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private String type;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private List<String> tags;
 
     @JsonProperty
+    @JsonView(Views.Db.class)
     private double weight;
 
     public Link() {
