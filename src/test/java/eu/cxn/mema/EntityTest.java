@@ -5,9 +5,10 @@
  */
 package eu.cxn.mema;
 
+import eu.cxn.mema.skeleton.IEntity;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author kubasek
@@ -15,14 +16,14 @@ import static org.junit.Assert.*;
 public class EntityTest {
 
     String json = "{" +
-            "id : '4546576756765756'," +
-            "clazz : 'Entity'" +
+            "'_id' : '4546576756765756'," +
+            "'clazz' : 'entity'" +
             "}";
 
     @Test
     public void readWrite() {
 
-        Entity e = Entity.of( json );
+        Entity e = IEntity.read(json);
         assertEquals( "4546576756765756", e.id());
     }
 

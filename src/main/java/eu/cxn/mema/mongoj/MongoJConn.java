@@ -7,11 +7,8 @@ package eu.cxn.mema.mongoj;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import eu.cxn.mema.json.Views;
-import eu.cxn.mema.mongo.MongoEnu;
 import eu.cxn.mema.skeleton.IEntity;
-import eu.cxn.mema.xlo.Xlo;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,27 +50,44 @@ public class MongoJConn {
      */
     private Class view;
 
+
     /**
-     * exit status remember this.. ;-)
+     * only private constructor, object need create by connect(..)
+     *
+     * @param db
+     * @param view
      */
-    public MongoEnu.ReturnCodes exitStatus = MongoEnu.ReturnCodes.OK;
-
-    protected String exitMessage = null;
-
     private MongoJConn(DB db, Class view) {
         this.db = db;
         this.view = view;
     }
 
+    /**
+     * database driver point
+     *
+     * @return
+     */
     public DB db() {
         return db;
     }
 
+    /**
+     * write view of jackson
+     *
+     * @return
+     */
     public Class viewClass() {
         return view;
     }
 
 
+    /**
+     * create MongoJConn connection
+     *
+     * @param credentials
+     * @return
+     * @throws MongoJException
+     */
     public static MongoJConn connect(MongoJCredentials credentials) throws MongoJException {
         return connect(credentials.host, credentials.database, credentials.auth, Views.Db.class);
     }
@@ -90,19 +104,22 @@ public class MongoJConn {
 
         try {
 
-            /* connection try */
-            MongoJConn mog = new MongoJConn(Mongo.connect(new DBAddress(host, database)), view);
+            MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://localhost:27017"));
+            MongoJConn mog = new MongoJConn(mongoClient.getDB("me-ma"), view);
 
-            /* authentisation onli if */
-            if (mog.db() != null && auth != null) {
-                mog.db().authenticate(auth.getUser(), auth.getPasswd().toCharArray());
-            }
+            /* connection try */
+            //MongoJConn mog = new MongoJConn( new Mongo( new MongoURI("mongodb://kuba:sonora@local/me-ma" )).getDb("me-ma"), view ); //Mongo.connect(new DBAddress(host, database)), view);
+
+//            /* authentization onli if */
+//            if (mog.db() != null && auth != null) {
+//                mog.db().authenticate(auth.getUser(), auth.getPasswd().toCharArray());
+//            }
 
             return mog;
 
 
-        } catch (UnknownHostException uhe) {
-            throw new MongoJException(MongoJEnums.ReturnCodes.UNKNOWN_HOST, uhe.getMessage());
+//        } catch (UnknownHostException uhe) {
+//            throw new MongoJException(MongoJEnums.ReturnCodes.UNKNOWN_HOST, uhe.getMessage());
 
         } catch (IllegalStateException ise) {
             throw new MongoJException(MongoJEnums.ReturnCodes.ILLEGAL_STATE, ise.getMessage());
@@ -120,16 +137,21 @@ public class MongoJConn {
         return new MongoJCollection(this, type, name);
     }
 
-    /**
-     * create and get collection by name
-     *
-     * @param name
-     * @return
-     */
-    public <T> MongoJCollection<T> createCollection(Class<T> type, String name) {
+//    /**
+//     * create and get collection by name
+//     *
+//     * @param name
+//     * @return
+//     */
+//    public void createCollection(String name) {
+//        if (!db.collectionExists(name)) {
+//            db.createCollection(name, null);
+//        }
+//    }
 
-        db.createCollection(name, null);
-        return collection(type, name);
+    public void dropCollection(String name) {
+        db.command("db." + name + ".drop()");
+        // TODO: how drop collection ?
     }
 
 
@@ -167,7 +189,7 @@ public class MongoJConn {
      */
     public synchronized void close() {
         if (db != null) {
-            db.getMongo().close();
+            // db.getMongo().close();
         }
     }
 
@@ -177,11 +199,10 @@ public class MongoJConn {
      * @return
      */
     public synchronized boolean isOpen() {
-        if (db != null) {
-            if (exitStatus == MongoEnu.ReturnCodes.OK && db.getMongo().getConnector().isOpen()) {
-                return true;
-            }
-        }
+//        if (db.getMongo().getConnector().isOpen()) {
+//            return true;
+//        }
+
 
         return false;
 
@@ -191,36 +212,31 @@ public class MongoJConn {
     /**
      * list databazi ya ?
      */
-    public List<String> dbList() {
-        if (db != null) {
-            return db.getMongo().getDatabaseNames();
-        } else {
-            Xlo.err("Can't get list databases, no connect to mongoDb");
-            return null;
-        }
-    }
+//    public List<String> dbList() {
+//            return db.getMongo().getDatabaseNames();
+//    }
 
-    /**
-     * vynalezeni objektu z db pomoci Json query
-     *
-     * @param collection
-     * @param query
-     * @return
-     */
-    public synchronized List<DBObject> find(String collection, String query) {
-        DBCollection coll = getCollection(collection);
-        List<DBObject> out = new ArrayList();
-
-        if (coll != null && query != null) {
-            DBCursor cur = query == null ? coll.find() : coll.find((BasicDBObject) JSON.parse(query));
-            while (cur.hasNext()) {
-                out.add(cur.next());
-            }
-        }
-
-        return out;
-
-    }
+//    /**
+//     * vynalezeni objektu z db pomoci Json query
+//     *
+//     * @param collection
+//     * @param query
+//     * @return
+//     */
+//    public synchronized List<DBObject> find(String collection, String query) {
+//        DBCollection coll = getCollection(collection);
+//        List<DBObject> out = new ArrayList();
+//
+//        if (coll != null && query != null) {
+//            DBCursor cur = query == null ? coll.find() : coll.find((BasicDBObject) JSON.parse(query));
+//            while (cur.hasNext()) {
+//                out.add(cur.next());
+//            }
+//        }
+//
+//        return out;
+//
+//    }
 
     /**
      * hleda query v kolekci a vysledek konvertuje na objekty Mo*
@@ -240,29 +256,29 @@ public class MongoJConn {
      * @param result
      * @return
      */
-    public synchronized <T extends IEntity, E> List<E> find(Class<T> c, String collection, String query, String fields, List<E> result) {
-        DBCollection coll = getCollection(collection);
-        List<E> out = result == null ? new ArrayList<E>() : result;
-
-        if (coll != null) {
-            DBCursor cur;
-            if (fields == null) {
-                cur = query == null ? coll.find() : coll.find((BasicDBObject) JSON.parse(query));
-            } else {
-                cur = coll.find((BasicDBObject) JSON.parse(query == null ? "{}" : query), (BasicDBObject) JSON.parse(fields));
-            }
-
-            /**
-             * nikdy neni null, muze bejt prazdnej..
-             */
-            while (cur.hasNext()) {
-                //out.add((E) IEntity.of(cur.next().toMap()));
-            }
-
-        }
-
-        return (List<E>) out;
-    }
+//    public synchronized <T extends IEntity, E> List<E> find(Class<T> c, String collection, String query, String fields, List<E> result) {
+//        DBCollection coll = getCollection(collection);
+//        List<E> out = result == null ? new ArrayList<E>() : result;
+//
+//        if (coll != null) {
+//            DBCursor cur;
+//            if (fields == null) {
+//                cur = query == null ? coll.find() : coll.find((BasicDBObject) JSON.parse(query));
+//            } else {
+//                cur = coll.find((BasicDBObject) JSON.parse(query == null ? "{}" : query), (BasicDBObject) JSON.parse(fields));
+//            }
+//
+//            /**
+//             * nikdy neni null, muze bejt prazdnej..
+//             */
+//            while (cur.hasNext()) {
+//                //out.add((E) IEntity.of(cur.next().toMap()));
+//            }
+//
+//        }
+//
+//        return (List<E>) out;
+//    }
 
 //    /**
 //     * najde podle jmena elementu a listu jeho hodnot seznam vsech objektu v collekci
@@ -284,13 +300,13 @@ public class MongoJConn {
     /*
      * najde jednoho :-)
      */
-    public DBObject findOne(String collection, String query) {
-        DBCollection coll = getCollection(collection);
-        if (coll != null && query != null) {
-            return coll.findOne((BasicDBObject) JSON.parse(query));
-        }
-        return null;
-    }
+//    public DBObject findOne(String collection, String query) {
+//        DBCollection coll = getCollection(collection);
+//        if (coll != null && query != null) {
+//            return coll.findOne((BasicDBObject) JSON.parse(query));
+//        }
+//        return null;
+//    }
 
     /**
      * spusteni nejakeho commandu nad kolekci, pouziva hlavne fullText search nad kolekci musi byt
@@ -371,46 +387,46 @@ public class MongoJConn {
         return null;
     }
 
-    /**
-     * ge
-     *
-     * @param query
-     * @param collection database object serialized into JSON
-     * @return
-     */
-    public List<String> old_find(String collection, String query) {
-        List<String> out = new ArrayList();
+//    /**
+//     * ge
+//     *
+//     * @param query
+//     * @param collection database object serialized into JSON
+//     * @return
+//     */
+//    public List<String> old_find(String collection, String query) {
+//        List<String> out = new ArrayList();
+//
+//        DBCollection coll = getCollection(collection);
+//        if (coll != null && query != null) {
+//            DBCursor cur = coll.find((BasicDBObject) JSON.parse(query));
+//            while (cur.hasNext()) {
+//                out.add(JSON.serialize(cur.next()));
+//            }
+//        } else {
+//            out.add(exitStatus.toString());
+//        }
+//
+//        return out;
+//    }
 
-        DBCollection coll = getCollection(collection);
-        if (coll != null && query != null) {
-            DBCursor cur = coll.find((BasicDBObject) JSON.parse(query));
-            while (cur.hasNext()) {
-                out.add(JSON.serialize(cur.next()));
-            }
-        } else {
-            out.add(exitStatus.toString());
-        }
-
-        return out;
-    }
-
-    /**
-     * vraci JSONized objekt nalezeny pomoci oid
-     *
-     * @param collection
-     * @param oid
-     * @return
-     */
-    public synchronized String getById(String collection, String oid) {
-        DBCollection coll = getCollection(collection);
-        if (coll != null && oid != null) {
-            DBObject o = coll.findOne("{ '_id.oid' : '" + oid + "' }");
-            if (o != null) {
-                return JSON.serialize(o);
-            }
-        }
-        return null;
-    }
+//    /**
+//     * vraci JSONized objekt nalezeny pomoci oid
+//     *
+//     * @param collection
+//     * @param oid
+//     * @return
+//     */
+//    public synchronized String getById(String collection, String oid) {
+//        DBCollection coll = getCollection(collection);
+//        if (coll != null && oid != null) {
+//            DBObject o = coll.findOne("{ '_id.oid' : '" + oid + "' }");
+//            if (o != null) {
+//                return JSON.serialize(o);
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * vraci collection, je osetrena i existence db/connection
@@ -428,45 +444,32 @@ public class MongoJConn {
      * @param collection
      * @return null kdz neexistuje db nebo collection
      */
-    public DBCollection getCollection(String collection, int trycounter) {
-        try {
-            if (db == null) {
-                exitStatus = MongoEnu.ReturnCodes.ERROR_DATABASE_NOT_EXIST;
-                return null;
-            } else if (db.collectionExists(collection)) {
-                exitStatus = MongoEnu.ReturnCodes.OK;
-                return db.getCollection(collection);
-            }
-        } catch (Exception e) {
-            if (trycounter == 0) {
-                Xlo.war("Mongo Connection error, try repeat");
-                return getCollection(collection, 1);
-            }
-            Xlo.err("Mongo Connection error", e);
-            exitStatus = MongoEnu.ReturnCodes.ERROR_CONNECTION;
-            return null;
+    private DBCollection getCollection(String collection, int trycounter) {
+
+        if (db.collectionExists(collection)) {
+            return db.getCollection(collection);
+        } else {
+            return db.createCollection(collection, null);
         }
-        exitStatus = MongoEnu.ReturnCodes.ERROR_COLLECTION_NOT_EXIST;
-        return null;
     }
 
-    /**
-     * insert object into collection
-     *
-     * @param collection
-     * @param o
-     * @return
-     */
-    public synchronized boolean insert(String collection, DBObject o) {
-        DBCollection coll = createCollection(collection);
-        if (coll != null && o != null) {
-            WriteResult wr = coll.insert(o);
-
-            // vetsi nez 0..
-            return wr.getN() > 0;
-        }
-        return false;
-    }
+//    /**
+//     * insert object into collection
+//     *
+//     * @param collection
+//     * @param o
+//     * @return
+//     */
+//    public synchronized boolean insert(String collection, DBObject o) {
+//        DBCollection coll = createCollection(collection);
+//        if (coll != null && o != null) {
+//            WriteResult wr = coll.insert(o);
+//
+//            // vetsi nez 0..
+//            return wr.getN() > 0;
+//        }
+//        return false;
+//    }
 
     /**
      * vlozi i s vrapperkem (zavola record )
@@ -475,10 +478,10 @@ public class MongoJConn {
      * @param e
      * @return
      */
-    public boolean insert(String collection, IEntity e) {
-        DBObject o = new BasicDBObject(e.toMap());
-        return insert(collection, o);
-    }
+//    public boolean insert(String collection, IEntity e) {
+//        DBObject o = new BasicDBObject(e.toMap());
+//        return insert(collection, o);
+//    }
 
     /**
      * save object
@@ -487,14 +490,14 @@ public class MongoJConn {
      * @param o
      * @return
      */
-    public synchronized boolean save(String collection, DBObject o) {
-        DBCollection coll = createCollection(collection);
-        if (coll != null && o != null) {
-            WriteResult wr = coll.save(o);
-            return wr.getN() > 0;
-        }
-        return false;
-    }
+//    public synchronized boolean save(String collection, DBObject o) {
+//        DBCollection coll = createCollection(collection);
+//        if (coll != null && o != null) {
+//            WriteResult wr = coll.save(o);
+//            return wr.getN() > 0;
+//        }
+//        return false;
+//    }
 
     /**
      * save element
@@ -503,10 +506,10 @@ public class MongoJConn {
      * @param e
      * @return
      */
-    public boolean save(String collection, IEntity e) {
-        DBObject o = new BasicDBObject(e.toMap());
-        return save(collection, (DBObject) o);
-    }
+//    public boolean save(String collection, IEntity e) {
+//        DBObject o = new BasicDBObject(e.toMap());
+//        return save(collection, (DBObject) o);
+//    }
 
     /**
      * remove object
@@ -515,21 +518,21 @@ public class MongoJConn {
      * @param o
      * @return
      */
-    public synchronized boolean remove(String collection, DBObject o) {
-        DBCollection coll = createCollection(collection);
-        if (coll != null && o != null) {
-            WriteResult wr = coll.remove(o, WriteConcern.ACKNOWLEDGED);
-            if (wr.getN() > 0) {
-//                if( o.isPartialObject()) {
-//                    coll.remove( "{ '_id.oid' : '" + oid + "' }" );
-//                }
-                return true;
-            }
-
-            Xlo.err("Mongo can't remove object: " + o.toString() + " -> " + wr.getError());
-        }
-        return false;
-    }
+//    public synchronized boolean remove(String collection, DBObject o) {
+//        DBCollection coll = createCollection(collection);
+//        if (coll != null && o != null) {
+//            WriteResult wr = coll.remove(o, WriteConcern.ACKNOWLEDGED);
+//            if (wr.getN() > 0) {
+////                if( o.isPartialObject()) {
+////                    coll.remove( "{ '_id.oid' : '" + oid + "' }" );
+////                }
+//                return true;
+//            }
+//
+//            Xlo.err("Mongo can't remove object: " + o.toString() + " -> " + wr.getError());
+//        }
+//        return false;
+//    }
 
     /**
      * remove collection from database
@@ -563,17 +566,17 @@ public class MongoJConn {
     /**
      * zavola aggregacni routineee, low level..
      */
-    public Iterable<DBObject> aggregate(String collection, DBObject match, DBObject project, DBObject group) {
-        DBCollection coll = getCollection(collection);
-        if (coll != null) {
-            AggregationOutput ao = coll.aggregate(match, project, group);
-            if (ao.getCommandResult().ok()) {
-                return ao.results();
-            }
-        }
-
-        return null;
-    }
+//    public Iterable<DBObject> aggregate(String collection, DBObject match, DBObject project, DBObject group) {
+//        DBCollection coll = getCollection(collection);
+//        if (coll != null) {
+//            AggregationOutput ao = coll.aggregate(match, project, group);
+//            if (ao.getCommandResult().ok()) {
+//                return ao.results();
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      * diiconstruct ya
@@ -588,9 +591,9 @@ public class MongoJConn {
      * @param g
      * @return
      */
-    public static String guidQuery(String g) {
-        return "{ '_id' : { $oid : '" + g + "' }}";
-    }
+//    public static String guidQuery(String g) {
+//        return "{ '_id' : { $oid : '" + g + "' }}";
+//    }
 
     /**
      * retezec dotazu na guid's objektu
@@ -645,13 +648,5 @@ public class MongoJConn {
 //        }
 
         return dbo;
-    }
-
-    public MongoEnu.ReturnCodes lastResult() {
-        return exitStatus;
-    }
-
-    public String lastErrorMessage() {
-        return exitMessage;
     }
 }

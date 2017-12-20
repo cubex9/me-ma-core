@@ -15,7 +15,7 @@ import java.util.Map;
 
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Entity.class, name = "entity"),
-        @JsonSubTypes.Type(value = Net.class, name = "class"),
+        @JsonSubTypes.Type(value = Net.class, name = "net"),
         @JsonSubTypes.Type(value = Node.class, name = "node"),
         @JsonSubTypes.Type(value = Link.class, name = "link"),
         @JsonSubTypes.Type(value = Tag.class, name = "tag"),
@@ -32,6 +32,8 @@ public interface IEntity {
 
     IEntity setNet(INet net);
 
+    IEntity id(String id);
+
     /**
      *
      * @param data
@@ -39,8 +41,8 @@ public interface IEntity {
      * @return
      */
     static <T extends IEntity> T read(String data) {
-        Entity ie = (Entity)Oma.read(data, Entity.class);
-        return (T)Oma.read(data, ie.clazz());
+        Entity ie = (Entity) Oma.read(data, IEntity.class);
+        return (T) Oma.read(data, ie.getClass());
     }
 
     /**

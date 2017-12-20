@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  *
  * @author kubasek
  */
-public class Node extends Entity implements INode {
+public class Node extends Entity implements INode, IEntity {
 
     @JsonProperty
     @JsonView(Views.Db.class)
@@ -32,12 +32,12 @@ public class Node extends Entity implements INode {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
-    public INodeType getType() {
+    public INodeType type() {
         return null;
     }
 
@@ -68,13 +68,5 @@ public class Node extends Entity implements INode {
         }
 
         return this;
-    }
-
-    @Override
-    public String toString() {
-        Collection<ITag> tags = tags();
-
-        return name + "("+id()+")"
-            + ( tags.isEmpty() ? "" : " #" + tags.stream().map( t -> t.getName()).collect(Collectors.joining(", #")));
     }
 }

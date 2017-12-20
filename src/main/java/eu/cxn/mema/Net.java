@@ -2,12 +2,11 @@ package eu.cxn.mema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.json.Views;
 import eu.cxn.mema.skeleton.IEntity;
 import eu.cxn.mema.skeleton.INet;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,10 @@ public class Net extends Entity implements INet {
 
     @JsonProperty
     @JsonView(Views.Db.class)
-    private Map<String, IEntity> entities;
+    private List<IEntity> entities;
+
+    /* hashed index of entities, by id */
+    private Map<String, IEntity> index;
 
     public Net() {
     }
@@ -31,40 +33,28 @@ public class Net extends Entity implements INet {
         this.name = name;
     }
 
-    public static INet of(String name, String... entities) {
-        Net n = new Net(name);
-        n.entities = new HashMap<>();
-        for (String e : entities) {
-            IEntity ent = Entity.of(e);
-            ent.setNet(n);
-            n.entities.put(ent.id(), ent);
-        }
-
-        return n;
-    }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 
     @Override
     public IEntity get(String id) {
-        return entities.get(id);
+        return index(id);
     }
 
-    @Override
-    public String toString() {
-        return entities.values().stream().collect(Collectors.groupingBy(IEntity::clazz))
-            .entrySet().stream()
-            .map(e -> e.getKey().getSimpleName() + ":\n\t"
-                + e.getValue().stream().map(v -> v.toString()).collect(Collectors.joining(",\n\t"))
-            )
-            .collect(Collectors.joining("\n"));
-    }
+    /**
+     * faster get
+     *
+     * @param id
+     * @return
+     */
+    private IEntity index(String id) {
+        if (index == null) {
+            index = entities.stream().collect(Collectors.toMap(IEntity::id, e -> e));
+        }
 
-    @Override
-    public String toJson() {
-        return Oma.write(this);
+        return index.get(id);
     }
 }

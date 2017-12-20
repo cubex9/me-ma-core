@@ -1,4 +1,4 @@
 package eu.cxn.mema.skeleton;
 
-public interface IOwner {
+public interface IOwner extends IEntity {
 }

@@ -1,16 +1,14 @@
 package eu.cxn.mema.mongoj;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import org.mongojack.DBQuery;
+import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * one collection of mongo-db
@@ -39,42 +37,101 @@ public class MongoJCollection<T> {
         return coll;
     }
 
-    public List<T> list() {
-        return coll().find().toArray();
-    }
-
-    public T findById() {
-        return coll().find().curr();
-    }
-
-    public DBQuery.Query query() {
+    /**
+     * get the query of collection
+     *
+     * @return
+     */
+    private DBCursor<T> query() {
         return coll().find();
     }
 
     /**
-     * nalezeni objektu, kde query predstavuje zadany objekt
+     * one result by Id -> quid
      *
+     * @param id
      * @return
      */
-    public synchronized Stream<T> find(DBQuery.Query q) {
+    public T findById(String id) {
+        return coll().findOneById(id);
+    }
 
-
-        org.mongojack.DBCursor<T> curr = coll.find();
-
-
-        new Stream.iterate(coll.find(q));
-
-        DBCollection coll = getCollection(collection);
-        List<DBObject> out = new ArrayList();
-
-        if (coll != null && query != null) {
-            DBCursor cur = query == null ? coll.find() : coll.find((BasicDBObject) JSON.parse(query));
-            while (cur.hasNext()) {
-                out.add(cur.next());
-            }
-        }
-
-        return out;
+    /**
+     * nefiltrovana kompletni kolekce
+     */
+    public Stream<T> stream() {
+        return stream(q -> q);
 
     }
+
+    /**
+     * get stream of results, by the query
+     * <p>
+     * <pre>
+     *     Stream<T> result = stream( q -> q.is("published", true).in("tags", "mongodb", "java", "jackson"));
+     * </pre>
+     *
+     * @param query
+     * @return
+     */
+    public Stream<T> stream(Function<DBCursor<T>, DBCursor<T>> query) {
+
+        /* make the cursor from query */
+        DBCursor<T> cursor = query.apply(query());
+
+        /* need spliterator */
+        Spliterator<T> s = new Spliterator<T>() {
+
+            @Override
+            public boolean tryAdvance(Consumer<? super T> action) {
+                if (cursor.hasNext()) {
+                    action.accept(cursor.next());
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public Spliterator<T> trySplit() {
+                return null;
+            }
+
+            @Override
+            public long estimateSize() {
+                return 0;
+            }
+
+            @Override
+            public int characteristics() {
+                return 0;
+            }
+        };
+
+        /* return stream */
+        return StreamSupport.stream(s, false);
+    }
+
+    /**
+     * vlozeni objektu do kolekce
+     *
+     * @param t
+     * @return
+     */
+    public T insert(T t) {
+        WriteResult<T, String> result = coll().insert(t);
+
+        return result.getSavedObject();
+    }
+
+    /**
+     * ulozeni existujiciho objektu do kolekce
+     */
+    public T merge(T t) {
+        WriteResult<T, String> result = coll().save(t);
+
+        return result.getSavedObject();
+    }
+
+
 }

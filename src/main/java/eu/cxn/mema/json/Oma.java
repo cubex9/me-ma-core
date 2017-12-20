@@ -24,6 +24,7 @@ public class Oma {
     private static final ObjectMapper om = new ObjectMapper();
 
     static {
+
         om.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         om.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         om.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
@@ -44,6 +45,22 @@ public class Oma {
      */
     public static ObjectMapper get() {
         return om;
+    }
+
+    /**
+     * write to string with view
+     *
+     * @param o
+     * @return
+     */
+    public static String write(Class view, Object o) {
+        try {
+            return get().writerWithView(view).writeValueAsString(o);
+        } catch (JsonProcessingException jpe) {
+
+            LOG.error("Can't process object to json: {}", o, jpe);
+            throw new IllegalStateException(jpe);
+        }
     }
 
     /**

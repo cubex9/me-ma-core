@@ -6,9 +6,7 @@ package eu.cxn.mema.skeleton;
  */
 public interface INet {
 
-    String getName();
+    String name();
 
-    IEntity get( String id);
-
-    String toJson();
+    IEntity get(String id);
 }

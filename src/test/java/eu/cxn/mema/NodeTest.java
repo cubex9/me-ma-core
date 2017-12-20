@@ -1,5 +1,6 @@
 package eu.cxn.mema;
 
+import eu.cxn.mema.skeleton.IEntity;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -10,16 +11,22 @@ import static org.junit.Assert.assertEquals;
 public class NodeTest {
 
     String json = "{" +
-            "id : '4546576756765756'," +
-            "clazz : 'Node'," +
+            "_id : '4546576756765756'," +
+            "clazz : 'node'," +
             "name : 'TEST-NODE'" +
             "}";
 
     @Test
     public void readNode() {
 
-        Node n = (Node)Entity.of( json );
-        assertEquals("TEST-NODE", n.getName());
+        Node n = IEntity.read(json);
+        assertEquals("{\n" +
+                "  \"clazz\" : \"node\",\n" +
+                "  \"name\" : \"TEST-NODE\",\n" +
+                "  \"type\" : null,\n" +
+                "  \"tags\" : null,\n" +
+                "  \"_id\" : \"4546576756765756\"\n" +
+                "}", n.toString());
     }
 }
 
