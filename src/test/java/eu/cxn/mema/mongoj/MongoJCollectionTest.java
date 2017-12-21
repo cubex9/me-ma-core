@@ -20,11 +20,13 @@ public class MongoJCollectionTest {
     @Test
     public void insertAndList() {
 
+        String collection = "nodes";
 
-        api.mongo().dropCollection("nodesTest");
+
+        api.mongo().dropCollection(collection);
 
         /* vytvorit kolekci */
-        MongoJCollection<IEntity> coll = api.mongo().collection(IEntity.class, "nodesTest");
+        MongoJCollection<IEntity> coll = api.mongo().collection(IEntity.class, collection);
 
         /* vlozit Node */
         //Node n = IEntity.read("{ clazz: 'node', name: 'Caffe', tags: [ '8', '9' ]}");
@@ -44,8 +46,6 @@ public class MongoJCollectionTest {
                 "  \"tags\" : [ \"8\", \"9\" ],\n" +
                 "  \"_id\" : \"5a3a60c9acef8605dc7ac0f8\"\n" +
                 "}", nodes);
-
-
     }
 
 }

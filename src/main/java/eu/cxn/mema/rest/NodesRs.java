@@ -2,13 +2,13 @@ package eu.cxn.mema.rest;
 
 import eu.cxn.mema.app.MeMaCore;
 import eu.cxn.mema.data.InMemory;
-import eu.cxn.mema.json.Oma;
-import eu.cxn.mema.json.Views;
+import eu.cxn.mema.script.adapters.MeMaApi;
 import eu.cxn.mema.skeleton.IEntity;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import java.util.stream.Collectors;
 
 /**
  * Created by kubasek on 7/2/2016.
@@ -16,6 +16,8 @@ import javax.ws.rs.Produces;
 @Path("/nodes")
 @Produces("text/plain")
 public class NodesRs {
+
+    MeMaApi api = MeMaCore.getInstance();
 
     @GET
     @Path("/info")
@@ -33,11 +35,8 @@ public class NodesRs {
     @Path("/net")
     @Produces("application/json; charset=utf-8")
     public String getNet() {
-        return Oma.write(
-                Views.Db.class,
-                MeMaCore.mongo
-                        .collection(IEntity.class, "nodes")
-                        .stream(q -> q).toArray()
-        );
+        return "[ "
+                + api.mongo().collection(IEntity.class, "nodes").stream().map(n -> n.toString()).collect(Collectors.joining(",\n"))
+                + " ]";
     }
 }

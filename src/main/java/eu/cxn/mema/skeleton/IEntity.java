@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import eu.cxn.mema.*;
 import eu.cxn.mema.json.Oma;
+import eu.cxn.mema.json.Views;
 import eu.cxn.mema.mongoj.MongoJAuth;
 
 import java.util.Map;
@@ -51,7 +52,7 @@ public interface IEntity {
      * @return
      */
     default <T extends IEntity> String write() {
-        return Oma.write(this);
+        return Oma.write(Views.Db.class, this);
     }
 
     /**

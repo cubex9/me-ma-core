@@ -43,7 +43,7 @@ public class Oma {
      *
      * @return
      */
-    public static ObjectMapper get() {
+    public static ObjectMapper mapper() {
         return om;
     }
 
@@ -55,7 +55,7 @@ public class Oma {
      */
     public static String write(Class view, Object o) {
         try {
-            return get().writerWithView(view).writeValueAsString(o);
+            return mapper().writerWithView(view).writeValueAsString(o);
         } catch (JsonProcessingException jpe) {
 
             LOG.error("Can't process object to json: {}", o, jpe);
@@ -71,7 +71,7 @@ public class Oma {
      */
     public static String write(Object o) {
         try {
-            return get().writeValueAsString(o);
+            return mapper().writeValueAsString(o);
         } catch (JsonProcessingException jpe) {
             LOG.error("Can't process object to json: {}", o, jpe);
             throw new IllegalStateException(jpe);
@@ -86,7 +86,7 @@ public class Oma {
      */
     public static Object read(String data, Class<?> clazz) {
         try {
-            return get().readValue(data, clazz);
+            return mapper().readValue(data, clazz);
         } catch( IOException ioe ) {
             LOG.error( "Cant read json data: " + data, ioe );
             throw new IllegalStateException("Cant read" + data);

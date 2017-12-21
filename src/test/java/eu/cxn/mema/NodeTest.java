@@ -27,6 +27,14 @@ public class NodeTest {
                 "  \"tags\" : null,\n" +
                 "  \"_id\" : \"4546576756765756\"\n" +
                 "}", n.toString());
+
+        assertEquals("{\n" +
+                "  \"clazz\" : \"node\",\n" +
+                "  \"name\" : \"TEST-NODE\",\n" +
+                "  \"type\" : null,\n" +
+                "  \"tags\" : null,\n" +
+                "  \"_id\" : \"4546576756765756\"\n" +
+                "}", n.toString());
     }
 }
 
