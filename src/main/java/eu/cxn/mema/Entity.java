@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.json.Views;
 import eu.cxn.mema.skeleton.IEntity;
-import eu.cxn.mema.skeleton.INet;
+import eu.cxn.mema.skeleton.IProject;
 import org.mongojack.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,25 +19,31 @@ import org.slf4j.LoggerFactory;
 public class Entity implements IEntity {
     private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
 
-    private INet net;
+    private IProject project;
 
     @ObjectId
     @JsonProperty("_id")
     @JsonView(Views.Db.class)
     private String id;
 
+    @ObjectId
+    @JsonProperty()
+    @JsonView(Views.Db.class)
+    private String projectId;
+
 
     public Entity() {
     }
 
     @Override
-    public INet net() {
-        return net;
+    public IProject project() {
+        return project;
     }
 
     @Override
-    public IEntity setNet( INet net) {
-        this.net = net;
+    public IEntity project(IProject project) {
+        this.project = project;
+
         return this;
     }
 

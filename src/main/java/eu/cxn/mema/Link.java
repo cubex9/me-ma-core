@@ -33,42 +33,36 @@ public class Link extends Entity implements ILink, IEntity {
 
     @JsonProperty
     @JsonView(Views.Db.class)
-    private double weight;
+    private double weight = 1.0;
 
     public Link() {
     }
 
     @Override
     @JsonIgnore
-    public INode getOff() {
-        return (INode)net().get(off);
+    public INode off() {
+        return (INode) project().get(off);
     }
 
     @Override
     @JsonIgnore
-    public INode getTarget() {
-        return (INode)net().get(target);
+    public INode target() {
+        return (INode) project().get(target);
     }
 
     @Override
     @JsonIgnore
-    public ILinkType getType() {
+    public ILinkType type() {
         return null;
     }
 
     @Override
     public Collection<ITag> tags() {
-        return tags.stream().map( t -> (ITag)net().get(t)).collect(Collectors.toList());
+        return tags.stream().map(t -> (ITag) project().get(t)).collect(Collectors.toList());
     }
 
-
     @Override
-    public double getWeight() {
+    public double weight() {
         return weight;
-    }
-
-    @Override
-    public String toString() {
-        return "[" + getOff() + " -> " + getTarget() + "] ("+id()+")";
     }
 }

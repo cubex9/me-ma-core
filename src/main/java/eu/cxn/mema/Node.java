@@ -48,7 +48,7 @@ public class Node extends Entity implements INode, IEntity {
 
     @Override
     public Collection<ITag> tags() {
-        return tags == null ? Arrays.asList() : tags.stream().map(t -> (ITag)net().get(t)).collect(Collectors.toList());
+        return tags == null ? Arrays.asList() : tags.stream().map(t -> (ITag) project().get(t)).collect(Collectors.toList());
     }
 
     @Override

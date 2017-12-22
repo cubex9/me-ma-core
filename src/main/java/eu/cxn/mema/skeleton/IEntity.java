@@ -16,7 +16,7 @@ import java.util.Map;
 
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Entity.class, name = "entity"),
-        @JsonSubTypes.Type(value = Net.class, name = "net"),
+        @JsonSubTypes.Type(value = Project.class, name = "project"),
         @JsonSubTypes.Type(value = Node.class, name = "node"),
         @JsonSubTypes.Type(value = Link.class, name = "link"),
         @JsonSubTypes.Type(value = Tag.class, name = "tag"),
@@ -29,9 +29,9 @@ public interface IEntity {
 
     String id();
 
-    INet net();
+    IProject project();
 
-    IEntity setNet(INet net);
+    IEntity project(IProject net);
 
     IEntity id(String id);
 

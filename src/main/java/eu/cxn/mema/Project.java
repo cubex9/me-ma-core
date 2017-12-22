@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import eu.cxn.mema.json.Views;
 import eu.cxn.mema.skeleton.IEntity;
-import eu.cxn.mema.skeleton.INet;
+import eu.cxn.mema.skeleton.IProject;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @author kubasek
  */
-public class Net extends Entity implements INet {
+public class Project extends Entity implements IProject {
 
     @JsonProperty
     @JsonView(Views.Db.class)
@@ -26,10 +26,10 @@ public class Net extends Entity implements INet {
     /* hashed index of entities, by id */
     private Map<String, IEntity> index;
 
-    public Net() {
+    public Project() {
     }
 
-    public Net(String name) {
+    public Project(String name) {
         this.name = name;
     }
 

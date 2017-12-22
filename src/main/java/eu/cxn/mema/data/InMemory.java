@@ -1,7 +1,7 @@
 package eu.cxn.mema.data;
 
 import eu.cxn.mema.skeleton.IEntity;
-import eu.cxn.mema.skeleton.INet;
+import eu.cxn.mema.skeleton.IProject;
 
 /**
  * Created by kubasek on 7/2/2016.
@@ -9,7 +9,7 @@ import eu.cxn.mema.skeleton.INet;
 public class InMemory {
 
     private static String entities = "{" +
-            "'clazz' :'Net'," +
+            "'clazz' :'project'," +
             "'name' : 'TEST-NET'," +
             "'entities' :[ " +
             "{ _id: '1', clazz: 'Node', name: 'Caffe', tags: [ '8', '9' ]}," +
@@ -28,5 +28,5 @@ public class InMemory {
             "}";
 
 
-    public static INet net = IEntity.read(entities);
+    public static IProject net = IEntity.read(entities);
 }

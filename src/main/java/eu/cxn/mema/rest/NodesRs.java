@@ -32,7 +32,7 @@ public class NodesRs {
      * @return
      */
     @GET
-    @Path("/net")
+    @Path("/project")
     @Produces("application/json; charset=utf-8")
     public String getNet() {
         return "[ "

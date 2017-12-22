@@ -23,7 +23,7 @@ public class NetTest {
 //    @Test
 //    public void build() {
 //
-//        INet net = IEntity.read(entities);
+//        IProject project = IEntity.read(entities);
 //
 //        String exp = "Node:\n" +
 //            "\tCaffe(1),\n" +
@@ -37,8 +37,8 @@ public class NetTest {
 //            "\t[Cup(4) -> Milk(2)] (6),\n" +
 //            "\t[Cup(4) -> Sugar(3)] (7)";
 //
-//        System.out.println(net.toString());
-//        System.out.println(net.toJson());
+//        System.out.println(project.toString());
+//        System.out.println(project.toJson());
 //
 //    }
 }
