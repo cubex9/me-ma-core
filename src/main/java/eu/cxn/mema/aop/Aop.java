@@ -4,7 +4,9 @@
  */
 package eu.cxn.mema.aop;
 
-import eu.cxn.mema.xlo.Xlo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Proxy;
 
 /**
@@ -42,6 +44,7 @@ import java.lang.reflect.Proxy;
  * @author kubasek
  */
 public class Aop {
+    private static final Logger LOG = LoggerFactory.getLogger(Aop.class);
 
     /**
      * in java:
@@ -102,7 +105,7 @@ public class Aop {
                     return (T) aha.getObject();
                 }
             } catch (IllegalArgumentException e) {
-                Xlo.err("Aop.deProxy: " + o.getClass().getName() + " -> " + e.getMessage());
+                LOG.error("Aop.deProxy: " + o.getClass().getName() + " -> " + e.getMessage());
             }
         }
 

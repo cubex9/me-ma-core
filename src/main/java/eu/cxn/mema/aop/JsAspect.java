@@ -4,7 +4,9 @@
  */
 package eu.cxn.mema.aop;
 
-import eu.cxn.mema.xlo.Xlo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.script.Invocable;
 import javax.script.ScriptException;
 
@@ -44,6 +46,7 @@ import javax.script.ScriptException;
  * @author kubasek
  */
 public class JsAspect extends BaseAspect {
+    private static final Logger LOG = LoggerFactory.getLogger(BaseAspect.class);
 
     /**
      * je vzdy pri startu deusexmachiny potreba naplnit
@@ -84,7 +87,7 @@ public class JsAspect extends BaseAspect {
             try {
                 inveco.invokeFunction("AopWrapper", new Object[]{before, o});
             } catch (ScriptException | NoSuchMethodException e) {
-                Xlo.err("JsAspect.before: " + o.getClass().getName() + " -> " + e.getMessage());
+                LOG.error("JsAspect.before: " + o.getClass().getName() + " -> " + e.getMessage());
             }
         }
         return args;
@@ -101,7 +104,7 @@ public class JsAspect extends BaseAspect {
             try {
                 inveco.invokeFunction("AopWrapper", new Object[]{after, o});
             } catch (ScriptException | NoSuchMethodException e) {
-                Xlo.err("JsAspect.before: " + o.getClass().getName() + " -> " + e.getMessage());
+                LOG.error("JsAspect.before: " + o.getClass().getName() + " -> " + e.getMessage());
             }
         }
         return res;
