@@ -48,7 +48,7 @@ public class AopMethodUtils {
      * pole stringu jmen metodek ktere jsou 'possible'
      */
     public static Predicate<Method> methodFilter(final String... names) {
-        final String ens = Strings.join(",", names);
+        final String ens = String.join(",", names);
         return m -> { 
                 String mn = m.getName();
                 for (String s : names) {
