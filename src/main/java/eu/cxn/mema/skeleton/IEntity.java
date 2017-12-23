@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import eu.cxn.mema.*;
 import eu.cxn.mema.json.Oma;
 import eu.cxn.mema.json.Views;
-import eu.cxn.mema.mongoj.MongoJAuth;
 
 import java.util.Map;
 
@@ -20,9 +19,6 @@ import java.util.Map;
         @JsonSubTypes.Type(value = Node.class, name = "node"),
         @JsonSubTypes.Type(value = Link.class, name = "link"),
         @JsonSubTypes.Type(value = Tag.class, name = "tag"),
-
-        // authentications
-        @JsonSubTypes.Type(value = MongoJAuth.class, name = "mongo-auth")
 })
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "clazz")
 public interface IEntity {
